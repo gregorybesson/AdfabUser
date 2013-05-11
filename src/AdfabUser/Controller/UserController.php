@@ -1,0 +1,1043 @@
+<?php
+namespace AdfabUser\Controller;
+
+use Hybrid_Auth;
+use Zend\Form\Form;
+use Zend\Stdlib\ResponseInterface as Response;
+use Zend\Stdlib\Parameters;
+use ZfcUser\Controller\UserController as ZfcUserController;
+use Zend\View\Model\ViewModel;
+
+class UserController extends ZfcUserController
+{
+    const ROUTE_CHANGEPASSWD = 'zfcuser/changepassword';
+    // No login page but register page !
+    const ROUTE_LOGIN        = 'zfcuser/register';
+    const ROUTE_REGISTER     = 'zfcuser/register';
+    const ROUTE_CHANGEEMAIL  = 'zfcuser/changeemail';
+
+    /**
+     *
+     * @var Form
+     */
+    protected $changeInfoForm;
+
+    protected $blockAccountForm;
+
+    protected $newsletterForm;
+
+    protected $addressForm;
+
+    protected $prizeCategoryForm;
+
+    protected $coreOptions;
+    /**
+     * @var Hybrid_Auth
+     */
+    protected $hybridAuth;
+
+    /**
+     * Login form
+     */
+    public function loginAction()
+    {
+        $request = $this->getRequest();
+        $form    = $this->getLoginForm();
+
+        if ($this->getOptions()->getUseRedirectParameterIfPresent() && $request->getQuery()->get('redirect')) {
+            $redirect = $request->getQuery()->get('redirect');
+        } else {
+            $redirect = false;
+        }
+
+        if (!$request->isPost()) {
+            // je redirige vers inscription
+            return $this->redirect()->toUrl($this->url()->fromRoute(static::ROUTE_REGISTER).($redirect ? '?redirect='.$redirect : ''));
+        }
+
+        $form->setData($request->getPost());
+
+        if (!$form->isValid()) {
+            $this->flashMessenger()->setNamespace('zfcuser-login-form')->addMessage($this->failedLoginMessage);
+
+            return $this->redirect()->toUrl($this->url()->fromRoute(static::ROUTE_REGISTER).($redirect ? '?redirect='.$redirect : ''));
+        }
+
+        // clear adapters
+        $this->zfcUserAuthentication()->getAuthAdapter()->resetAdapters();
+        $this->zfcUserAuthentication()->getAuthService()->clearIdentity();
+
+        return $this->forward()->dispatch(static::CONTROLLER_NAME, array('action' => 'authenticate'));
+    }
+
+    /**
+     * Register new user
+     */
+    public function registerAction ()
+    {
+        if ($this->zfcUserAuthentication()->hasIdentity()) {
+            return $this->redirect()->toRoute($this->getOptions()->getLoginRedirectRoute());
+        }
+        $request = $this->getRequest();
+        $service = $this->getUserService();
+        $form = $this->getRegisterForm();
+        $socialnetwork = $this->params()->fromRoute('socialnetwork', false);
+        $form->setAttribute('action', $this->url()->fromRoute('zfcuser/register'));
+        $params = array();
+        $socialCredentials = array();
+
+        if ($socialnetwork) {
+            $infoMe = null;
+            $infoMe = $this->getProviderService()->getInfoMe($socialnetwork);
+
+            if (!empty($infoMe)) {
+                $user = $this->getProviderService()->getUserProviderMapper()->findUserByProviderId($infoMe->identifier, $socialnetwork);
+                if ($user) {
+
+                    //on le dirige vers l'action d'authentification
+                    $redir = $this->url()
+                        ->fromRoute('zfcuser/login') .'/' . $socialnetwork . ($redirect ? '?redirect=' . $redirect : '');
+
+                    return $this->redirect()->toUrl($redir);
+                }
+                // Je retire la saisie du login/mdp
+                $form->setAttribute('action', $this->url()->fromRoute('zfcuser/register', array('socialnetwork' => $socialnetwork)));
+                $form->remove('password');
+                $form->remove('passwordVerify');
+
+                $params = array(
+                    'birth_year'  => $infoMe->birthYear,
+                    'firstname'   => $infoMe->firstName,
+                    'lastname'    => $infoMe->lastName,
+                    'email'       => $infoMe->email,
+                    'postal_code' => $infoMe->zip,
+                );
+                $socialCredentials = array(
+                    'socialNetwork' => strtolower($socialnetwork),
+                    'socialId'      => $infoMe->identifier,
+                );
+            }
+        }
+
+        if ($this->getOptions()->getUseRedirectParameterIfPresent() && $request->getQuery()->get('redirect')) {
+            $redirect = $request->getQuery()->get('redirect');
+        } else {
+            $redirect = false;
+        }
+
+        $redirectUrl = $this->url()->fromRoute('zfcuser/register') .($socialnetwork ? '/' . $socialnetwork : ''). ($redirect ? '?redirect=' . $redirect : '');
+        $prg = $this->prg($redirectUrl, true);
+
+        if ($prg instanceof Response) {
+            return $prg;
+        } elseif ($prg === false) {
+            $form->setData($params);
+
+            return array(
+                'registerForm' => $form,
+                'enableRegistration' => $this->getOptions()->getEnableRegistration(),
+                'redirect' => $redirect
+            );
+        }
+
+        $post = $prg;
+        $post = array_merge(
+            $post,
+            $socialCredentials
+        );
+
+        $user = $service->register($post);
+
+        if (! $user) {
+            return array(
+                'registerForm' => $form,
+                'enableRegistration' => $this->getOptions()->getEnableRegistration(),
+                'redirect' => $redirect
+            );
+        }
+
+        //if (!$socialnetwork) {
+
+            if ($service->getOptions()->getEmailVerification()) {
+
+                $vm = new ViewModel(array('userEmail' => $user->getEmail()));
+                $vm->setTemplate('adfab-user/frontend/register/registermail');
+
+                return $vm;
+
+                //return $this->redirect()->toUrl($this->url()->fromRoute('zfcuser/registermail', array('userId' => $user->getId())));
+            } elseif ($service->getOptions()->getLoginAfterRegistration()) {
+                $identityFields = $service->getOptions()->getAuthIdentityFields();
+                if (in_array('email', $identityFields)) {
+                    $post['identity'] = $user->getEmail();
+                } elseif (in_array('username', $identityFields)) {
+                    $post['identity'] = $user->getUsername();
+                }
+                $post['credential'] = isset($post['password'])?$post['password']:'';
+                $request->setPost(new Parameters($post));
+
+                return $this->forward()->dispatch('zfcuser', array(
+                    'action' => 'authenticate'
+                ));
+            }
+        //}
+
+        // TODO: Add the redirect parameter here...
+        $redirect = $this->url()->fromRoute('zfcuser/login') . ($socialnetwork ? '/' . $socialnetwork : ''). ($redirect ? '?redirect=' . $redirect : '');
+
+        return $this->redirect()->toUrl($redirect);
+    }
+
+    /**
+     * Backend D'HybridAuth utilisé pour l'authentification
+     */
+    public function HybridAuthBackendAction()
+    {
+        try {
+            \Hybrid_Endpoint::process();
+        } catch (\Exception $e) {
+            return $this->redirect()->toRoute('home');
+        }
+    }
+
+    public function ajaxloginAction ()
+    {
+        $form = $this->getLoginForm();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+
+        if ($this->getOptions()->getUseRedirectParameterIfPresent() && $request->getPost()->get('redirect')) {
+            $redirect = $request->getPost()->get('redirect');
+        } else {
+            $redirect = false;
+        }
+
+        $messages = array();
+        if ($request->isPost()) {
+            $form->setData($request->getPost());
+            if (! $form->isValid()) {
+                $errors = $form->getMessages();
+                /*
+                 * foreach ($errors as $key=>$row) { if (!empty($row) && $key !=
+                 * 'submit') { foreach ($row as $keyer => $rower) {
+                 * $messages[$keyer] = $rower; } } }
+                 */
+            }
+
+            if (! empty($messages)) {
+                $response->setContent(\Zend\Json\Json::encode(array(
+                    'success' => 0
+                )));
+            } else {
+                $this->zfcUserAuthentication()
+                    ->getAuthAdapter()
+                    ->resetAdapters();
+                $this->zfcUserAuthentication()
+                    ->getAuthService()
+                    ->clearIdentity();
+                $result = $this->forward()->dispatch('adfabuser_user', array(
+                    'action' => 'ajaxauthenticate'
+                ));
+                if (! $result) {
+                    $response->setContent(\Zend\Json\Json::encode(array(
+                        'success' => 0
+                    )));
+                } else {
+                    $response->setContent(\Zend\Json\Json::encode(array(
+                        'success' => 1
+                    )));
+                }
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * Ajax authentication action
+     */
+    public function ajaxauthenticateAction ()
+    {
+        // $this->getServiceLocator()->get('Zend\Log')->info('ajaxloginAction -
+        // AUTHENT : ');
+        if ($this->zfcUserAuthentication()
+            ->getAuthService()
+            ->hasIdentity()) {
+            return true;
+        }
+        $adapter = $this->zfcUserAuthentication()->getAuthAdapter();
+        $redirect = $this->params()->fromPost('redirect', $this->params()
+            ->fromQuery('redirect', false));
+
+        $result = $adapter->prepareForAuthentication($this->getRequest());
+
+        // Return early if an adapter returned a response
+        /*
+         * if ($result instanceof Response) { return $result; }
+         */
+
+        $auth = $this->zfcUserAuthentication()->getAuthService()->authenticate($adapter);
+
+        if (! $auth->isValid()) {
+            $adapter->resetAdapters();
+
+            return false;
+        }
+
+        $user = $this->zfcUserAuthentication()->getIdentity();
+
+        if ( $user->getState() && $user->getState() === 2 ) {
+            $this->getUserService()->getUserMapper()->activate($user);
+        }
+
+        return true;
+    }
+
+    public function providerLoginAction()
+    {
+
+        $provider = $this->getEvent()->getRouteMatch()->getParam('provider');
+        if (!in_array($provider, $this->getUserService()->getOptions()->getEnabledProviders())) {
+            return $this->notFoundAction();
+        }
+
+        $hybridAuth = $this->getHybridAuth();
+
+        $query = 'provider=' . $provider;
+        if ($this->getServiceLocator()->get('zfcuser_module_options')->getUseRedirectParameterIfPresent() && $this->getRequest()->getQuery()->get('redirect')) {
+            $query .= '&redirect=' . $this->getRequest()->getQuery()->get('redirect');
+        }
+
+        $redirectUrl = $this->url()->fromRoute('zfcuser/authenticate') . '?' . $query;
+
+        $adapter = $hybridAuth->authenticate(
+            $provider,
+            array('hauth_return_to' => $redirectUrl)
+        );
+
+        return $this->redirect()->toUrl($redirectUrl);
+    }
+
+    public function logoutAction()
+    {
+        Hybrid_Auth::logoutAllProviders();
+
+        return $this->forward()->dispatch('zfcuser', array('action' => 'logout'));
+    }
+
+    /**
+     * user profile
+     * Management of 4 differents forms...
+     * TODO : Refactor it ! this is uuuuuugly !
+     */
+    public function profileAction ()
+    {
+        if (! $this->zfcUserAuthentication()->hasIdentity()) {
+            return $this->redirect()->toRoute($this->getOptions()
+                ->getLoginRedirectRoute());
+        }
+        $formEmail     = $this->getChangeEmailForm();
+        $formEmail->get('credential')
+                  ->setLabel('Mot de passe')
+                  ->setAttributes(array(
+                      'type' 			=> 'password',
+                      'class' 		=> 'large-input',
+                      'placeholder' 	=> 'Votre mot de passe'
+                  ));
+        $formEmail->get('newIdentity')
+                  ->setLabel('Nouvel email')
+                  ->setAttributes(array(
+                      'type' 			=> 'email',
+                      'class' 		=> 'large-input',
+                      'placeholder' 	=> 'Votre nouvel email'
+                  ));
+        $formEmail->get('newIdentityVerify')
+                  ->setLabel('Confirmer le nouvel email')
+                  ->setAttributes(array(
+                      'type' 			=> 'email',
+                      'class' 		=> 'large-input',
+                      'placeholder'	=> 'Confirmer votre nouvel email'
+                  ));
+        $formPassword  = $this->getChangePasswordForm();
+        $formPassword->get('credential')
+                     ->setLabel('Mot de passe actuel')
+                     ->setAttributes(array(
+                         'class' 	=> 'large-input',
+                         'type'		=> 'password',
+                         'placeholder' => 'Votre mot de passe actuel'
+                     ));
+        $formPassword->get('newCredential')
+                     ->setLabel('Nouveau mot de passe')
+                     ->setAttributes(array(
+                         'class' 	=> 'large-input',
+                         'type'		=> 'password',
+                         'placeholder' => 'Votre nouveau mot de passe'
+                     ));
+        $formPassword->get('newCredentialVerify')
+                     ->setLabel('Confirmer le nouveau mot de passe')
+                     ->setAttributes(array(
+                         'class' 	=> 'large-input',
+                         'type'		=> 'password',
+                         'placeholder' => 'Confirmer votre nouveau mot de passe'
+                     ));;
+        $formInfo      = $this->getChangeInfoForm();
+        $formPrize     = $this->getPrizeCategoryForm();
+        $formBlock     = $this->getBlockAccountForm();
+        if ($this->zfcUserAuthentication()->getIdentity()->getState() == 2) {
+            $formBlock->get('activate')->setAttribute('value', 1);
+            $formBlock->get('submit')->setAttribute('value', 'Réactiver mon compte');
+            $formBlock->get('confirm_submit')->setAttribute('value', 'Confirmer réactivation');
+        }
+
+        $categoryService = $this->getServiceLocator()->get('adfabgame_prizecategoryuser_service');
+        $categoriesUser = $categoryService->getPrizeCategoryUserMapper()->findBy(array('user' => $this->zfcUserAuthentication()->getIdentity()));
+        $existingCategories = array();
+
+        foreach ($categoriesUser as $categoryUser) {
+            $existingCategories[] = $categoryUser->getPrizeCategory()->getId();
+        }
+
+        $formPrize->get('prizeCategory')->setAttribute('value', $existingCategories);
+
+        $request = $this->getRequest();
+        // I don't want to rely on the browser's info for these key datas
+        $request->getPost()->set('identity', $this->getUserService()
+            ->getAuthService()
+            ->getIdentity()
+            ->getEmail());
+        $request->getPost()->set('email', $this->getUserService()
+            ->getAuthService()
+            ->getIdentity()
+            ->getEmail());
+        $userId = $this->getUserService()
+            ->getAuthService()
+            ->getIdentity()
+            ->getId();
+
+        $user = $this->getUserService()
+            ->getUserMapper()
+            ->findById($userId);
+        $formInfo->bind($user);
+
+        $username = $formInfo->get('username')->getValue();
+        $userFirstLastName = $user->getFirstName().' '.substr($user->getLastName(), 0, 1);
+        if (empty($username) || $username == $userFirstLastName) {
+            $usernamePoint = '+ 150 pts';
+        } else {
+            $usernamePoint = '';
+        }
+
+        $fmPassword = $this->flashMessenger()
+            ->setNamespace('change-password')
+            ->getMessages();
+
+        if (isset($fmPassword[0])) {
+            $statusPassword = $fmPassword[0];
+        } else {
+            $statusPassword = null;
+        }
+
+        $fmEmail = $this->flashMessenger()
+            ->setNamespace('change-email')
+            ->getMessages();
+        if (isset($fmEmail[0])) {
+            $statusEmail = $fmEmail[0];
+        } else {
+            $statusEmail = null;
+        }
+
+        $fmInfo = $this->flashMessenger()
+            ->setNamespace('change-info')
+            ->getMessages();
+        if (isset($fmInfo[0])) {
+            $statusInfo = $fmInfo[0];
+        } else {
+            $statusInfo = null;
+        }
+
+        if ($request->isPost() && array_key_exists('firstname', $this->params()->fromPost())) {
+            $result = false;
+            $data = $request->getPost()->toArray();
+            $file = $this->params()->fromFiles('avatar');
+            if ($file['name']) {
+                $data = array_merge($data, array(
+                    'avatar' => $file['name']
+                ));
+            }
+
+            $result = $this->getUserService()->updateInfo($data, $user);
+
+            if (! $result) {
+                return array(
+                    'statusPassword' => null,
+                    'changePasswordForm' => $formPassword,
+                    'statusEmail' => null,
+                    'changeEmailForm' => $formEmail,
+                    'statusInfo' => false,
+                    'changeInfoForm' => $formInfo,
+                    'prizeCategoryForm' => $formPrize,
+                    'blockAccountForm' => $formBlock,
+                    'usernamePoint' => $usernamePoint,
+                );
+            }
+
+            $this->flashMessenger()
+                ->setNamespace('change-info')
+                ->addMessage(true);
+
+            return $this->redirect()->toRoute('zfcuser/profile');
+        }
+
+        $prg = $this->prg('zfcuser/profile');
+
+        if ($prg instanceof Response) {
+            return $prg;
+        } elseif ($prg === false) {
+            return array(
+                'statusPassword' => $statusPassword,
+                'changePasswordForm' => $formPassword,
+                'statusEmail' => $statusEmail,
+                'changeEmailForm' => $formEmail,
+                'statusInfo' => $statusInfo,
+                'changeInfoForm' => $formInfo,
+                'prizeCategoryForm' => $formPrize,
+                'blockAccountForm' => $formBlock,
+                'usernamePoint' => $usernamePoint,
+            );
+        }
+
+        if (isset($prg['newCredential'])) {
+            $formPassword->setData($prg);
+            if (! $formPassword->isValid()) {
+                $messages = $formPassword->getMessages();
+                if ($messages['credential'] && $messages['credential']['isEmpty']) {
+                    $messages['credential']['isEmpty'] = 'Saisissez votre mot de passe actuel';
+                }
+                if ($messages['newCredential'] && $messages['newCredential']['isEmpty']) {
+                    $messages['newCredential']['isEmpty'] = 'Saisissez votre nouveau mot de passe';
+                }
+                if ($messages['newCredentialVerify'] && $messages['newCredentialVerify']['isEmpty']) {
+                    $messages['newCredentialVerify']['isEmpty'] = 'Confirmation du mot de passe ';
+                }
+                $formPassword->setMessages($messages);
+
+                return array(
+                    'statusPassword' => false,
+                    'changePasswordForm' => $formPassword,
+                    'statusEmail' => null,
+                    'changeEmailForm' => $formEmail,
+                    'statusInfo' => null,
+                    'changeInfoForm' => $formInfo,
+                    'prizeCategoryForm' => $formPrize,
+                    'blockAccountForm' => $formBlock,
+                    'usernamePoint' => $usernamePoint,
+                );
+            }
+
+            if (! $this->getUserService()->changePassword($formPassword->getData())) {
+                return array(
+                    'statusPassword' => false,
+                    'changePasswordForm' => $formPassword,
+                    'statusEmail' => null,
+                    'changeEmailForm' => $formEmail,
+                    'statusInfo' => null,
+                    'changeInfoForm' => $formInfo,
+                    'prizeCategoryForm' => $formPrize,
+                    'blockAccountForm' => $formBlock,
+                    'usernamePoint' => $usernamePoint,
+                );
+            }
+
+            $this->flashMessenger()
+                ->setNamespace('change-password')
+                ->addMessage(true);
+
+            return $this->redirect()->toRoute('zfcuser/profile');
+        } elseif (isset($prg['newIdentity'])) {
+            $formEmail->setData($prg);
+
+            if (! $formEmail->isValid()) {
+                return array(
+                    'statusPassword' => null,
+                    'changePasswordForm' => $formPassword,
+                    'statusEmail' => false,
+                    'changeEmailForm' => $formEmail,
+                    'statusInfo' => null,
+                    'changeInfoForm' => $formInfo,
+                    'prizeCategoryForm' => $formPrize,
+                    'blockAccountForm' => $formBlock,
+                    'usernamePoint' => $usernamePoint,
+                );
+            }
+
+            $change = $this->getUserService()->changeEmail($prg);
+
+            if (! $change) {
+                $this->flashMessenger()
+                    ->setNamespace('change-email')
+                    ->addMessage(false);
+
+                return array(
+                    'statusPassword' => null,
+                    'changePasswordForm' => $formPassword,
+                    'statusEmail' => false,
+                    'changeEmailForm' => $formEmail,
+                    'statusInfo' => null,
+                    'changeInfoForm' => $formInfo,
+                    'prizeCategoryForm' => $formPrize,
+                    'blockAccountForm' => $formBlock,
+                    'usernamePoint' => $usernamePoint,
+                );
+            }
+
+            $this->flashMessenger()
+                ->setNamespace('change-email')
+                ->addMessage(true);
+
+            return $this->redirect()->toRoute('zfcuser/profile');
+        }
+
+        return array(
+            'statusPassword' => null,
+            'changePasswordForm' => $formPassword,
+            'statusEmail' => null,
+            'changeEmailForm' => $formEmail,
+            'statusInfo' => null,
+            'changeInfoForm' => $formInfo,
+            'prizeCategoryForm' => $formPrize,
+            'blockAccountForm' => $formBlock,
+            'usernamePoint' => $usernamePoint,
+        );
+    }
+
+    /**
+     * address
+     */
+    public function addressAction ()
+    {
+
+        if (! $this->zfcUserAuthentication()->hasIdentity()) {
+            return null;
+        }
+        $form = $this->getAddressForm();
+        //$form->setAttribute('action', '');
+
+        $request = $this->getRequest();
+        // I don't want to rely on the browser's info for these key datas
+        $request->getPost()->set('identity', $this->getUserService()
+                ->getAuthService()
+                ->getIdentity()
+                ->getEmail());
+        $request->getPost()->set('email', $this->getUserService()
+                ->getAuthService()
+                ->getIdentity()
+                ->getEmail());
+        $userId = $this->getUserService()
+            ->getAuthService()
+            ->getIdentity()
+            ->getId();
+
+        $user = $this->getUserService()->getUserMapper()->findById($userId);
+        $form->bind($user);
+
+        if ( $request->isPost() ) {
+            $data = $request->getPost()->toArray();
+
+            $result = $this->getUserService()->updateAddress($data, $user);
+            if ($result) {
+                return true;
+            }
+        }
+
+        $viewModel = new ViewModel();
+        $viewModel->setVariables(array('form' => $form));
+
+        return $viewModel;
+    }
+
+    public function blockAccountAction ()
+    {
+        // if the user isn't logged in, we can't change password
+        if (!$this->zfcUserAuthentication()->hasIdentity()) {
+            return $this->redirect()->toRoute('zfcuser/profile');
+        }
+
+        if ($this->getRequest()->isPost()) {
+            $data = $this->getRequest()->getPost()->toArray();
+            if ($this->getUserService()->blockAccount($data)) {
+                $this->flashMessenger()->setNamespace('block-account')->addMessage(true);
+            }
+        }
+
+        return $this->redirect()->toRoute('zfcuser/profile');
+    }
+
+    public function prizeCategoryUserAction ()
+    {
+
+        if ($this->getRequest()->isPost()) {
+            $data = $this->getRequest()->getPost()->toArray();
+            $service = $this->getServiceLocator()->get('adfabgame_prizecategoryuser_service');
+            $result = $service->edit($data, $this->zfcUserAuthentication()->getIdentity(), 'adfabgame_prizecategoryuser_form');
+            if ($result) {
+                $this->flashMessenger()
+                    ->setNamespace('adfabgame')
+                    ->addMessage('La catégorie a été mise à jour');
+            }
+        }
+
+        return $this->redirect()->toRoute('zfcuser/profile');
+    }
+
+    /**
+     * Newsletter
+     */
+    public function newsletterAction ()
+    {
+        // if the user isn't logged in, we can't change password
+        if (!$this->zfcUserAuthentication()->hasIdentity()) {
+            return $this->redirect()->toRoute('zfcuser/profile');
+        }
+        $userId = $this->getUserService()
+        ->getAuthService()
+        ->getIdentity()
+        ->getId();
+
+        $user = $this->getUserService()
+            ->getUserMapper()
+            ->findById($userId);
+
+        $viewModel = new ViewModel();
+
+        $request = $this->getRequest();
+        $service = $this->getUserService();
+        $form = $this->getNewsletterForm();
+        $form->bind($user);
+
+        if ($this->getRequest()->isPost()) {
+            $data = $this->getRequest()->getPost()->toArray();
+            if ($this->getUserService()->updateNewsletter($data)) {
+                $this->flashMessenger()->setNamespace('newsletter')->addMessage(true);
+            }
+        }
+        $viewModel->setVariables(array('form' => $form));
+
+        return $viewModel;
+    }
+
+    public function ajaxNewsletterAction ()
+    {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+
+        if (!$this->zfcUserAuthentication()->hasIdentity()) {
+            $response->setContent(\Zend\Json\Json::encode(array(
+                'success' => 0
+            )));
+        } else {
+            if ($request->isPost()) {
+                $data = $this->getRequest()->getPost()->toArray();
+                $data['optinPartner'] = $this->zfcUserAuthentication()->getIdentity()->getOptinPartner();
+
+                if ($this->getUserService()->updateNewsletter($data)) {
+                    $response->setContent(\Zend\Json\Json::encode(array(
+                        'success' => 1
+                    )));
+                } else {
+                    $response->setContent(\Zend\Json\Json::encode(array(
+                        'success' => 0
+                    )));
+                }
+            }
+        }
+
+        return $response;
+    }
+
+    public function checkTokenAction()
+    {
+        $service = $this->getUserService();
+        $service->cleanExpiredVerificationRequests();
+
+        // Pull and validate the Request Key
+        $token = $this->getRequest()->getQuery()->get('token');
+        //$token = $this->plugin('params')->fromRoute('token');
+        $validator = new \Zend\Validator\Hex();
+        if ( !$validator->isValid($token) ) {
+            throw new \InvalidArgumentException('Invalid Token!');
+        }
+
+        // Find the request key in the database
+        $validation = $service->findByRequestKey($token);
+        if (! $validation) {
+            throw new \InvalidArgumentException('Invalid Token r!');
+        }
+
+        return $this->forward()->dispatch('zfcuser', array(
+            'action' => 'authenticate'
+        ));
+    }
+
+    /**
+     * user activity
+     */
+    public function activityAction ()
+    {
+        $viewModel = new ViewModel();
+
+        return $viewModel;
+    }
+
+    /**
+     * user registermail
+     */
+    public function registermailAction ()
+    {
+        $viewModel = new ViewModel();
+
+        return $viewModel;
+    }
+
+    /**
+     * user game account
+     */
+    public function accountAction ()
+    {
+        $viewModel = new ViewModel();
+
+        return $viewModel;
+    }
+
+    /**
+     * Get changeEmailForm.
+     *
+     * @return changeEmailForm.
+     */
+    public function getChangeInfoForm ()
+    {
+        if (! $this->changeInfoForm) {
+            $this->setChangeInfoForm($this->getServiceLocator()
+                ->get('adfabuser_change_info_form'));
+        }
+
+        return $this->changeInfoForm;
+    }
+
+    /**
+     * Set changeEmailForm.
+     *
+     * @param
+     *            changeEmailForm the value to set.
+     */
+    public function setChangeInfoForm ($changeInfoForm)
+    {
+        $this->changeInfoForm = $changeInfoForm;
+
+        return $this;
+    }
+
+    /**
+     * Get prizeCategoryForm.
+     *
+     * @return prizeCategoryForm.
+     */
+    public function getPrizeCategoryForm ()
+    {
+        if (! $this->prizeCategoryForm) {
+            $this->setPrizeCategoryForm($this->getServiceLocator()
+                ->get('adfabgame_prizecategoryuser_form'));
+        }
+
+        return $this->prizeCategoryForm;
+    }
+
+    /**
+     * Set prizeCategoryForm.
+     *
+     * @param
+     *            prizeCategoryForm the value to set.
+     */
+    public function setPrizeCategoryForm ($prizeCategoryForm)
+    {
+        $this->prizeCategoryForm = $prizeCategoryForm;
+
+        return $this;
+    }
+
+    /**
+     * Get blockAccountForm.
+     *
+     * @return blockAccountForm.
+     */
+    public function getBlockAccountForm ()
+    {
+        if (! $this->blockAccountForm) {
+            $this->setBlockAccountForm($this->getServiceLocator()
+                    ->get('adfabuser_blockaccount_form'));
+        }
+
+        return $this->blockAccountForm;
+    }
+
+    /**
+     * Set blockAccountForm.
+     *
+     * @param  blockAccountForm the value to set.
+     */
+    public function setBlockAccountForm ($blockAccountForm)
+    {
+        $this->blockAccountForm = $blockAccountForm;
+
+        return $this;
+    }
+
+    /**
+     * Get newsletterForm.
+     *
+     * @return newsletterForm.
+     */
+    public function getNewsletterForm ()
+    {
+        if (! $this->newsletterForm) {
+            $this->setNewsletterForm($this->getServiceLocator()
+                    ->get('adfabuser_newsletter_form'));
+        }
+
+        return $this->newsletterForm;
+    }
+
+    /**
+     * Set newsletterForm.
+     *
+     * @param  newsletterForm the value to set.
+     */
+    public function setNewsletterForm ($newsletterForm)
+    {
+        $this->newsletterForm = $newsletterForm;
+
+        return $this;
+    }
+
+    /**
+     * Get addressForm.
+     *
+     * @return addressForm.
+     */
+    public function getAddressForm ()
+    {
+        if (! $this->addressForm) {
+            $this->setAddressForm($this->getServiceLocator()
+                    ->get('adfabuser_address_form'));
+        }
+
+        return $this->addressForm;
+    }
+
+    /**
+     * Set addressForm.
+     *
+     * @param  addressForm the value to set.
+     */
+    public function setAddressForm ($addressForm)
+    {
+        $this->addressForm = $addressForm;
+
+        return $this;
+    }
+
+    /**
+     * Service Provider
+     * @var
+     */
+    protected $providerService;
+
+    /**
+     * initialisation du service
+     * @param  $service
+     */
+    public function setProviderService($service)
+    {
+        $this->providerService = $service;
+    }
+
+    /**
+     * retourne le service social
+     * @return
+     */
+    public function getProviderService()
+    {
+        if ($this->providerService == null) {
+            $this->setProviderService($this->getServiceLocator()->get('adfabuser_provider_service'));
+        }
+
+        return $this->providerService;
+    }
+
+    /**
+     * Get the Hybrid_Auth object
+     *
+     * @return Hybrid_Auth
+     */
+    public function getHybridAuth()
+    {
+        if (!$this->hybridAuth) {
+            $this->hybridAuth = $this->getServiceLocator()->get('HybridAuth');
+        }
+
+        return $this->hybridAuth;
+    }
+
+    /**
+     * Set the Hybrid_Auth object
+     *
+     * @param  Hybrid_Auth    $hybridAuth
+     * @return UserController
+     */
+    public function setHybridAuth(Hybrid_Auth $hybridAuth)
+    {
+        $this->hybridAuth = $hybridAuth;
+
+        return $this;
+    }
+
+    protected function getViewHelper($helperName)
+    {
+        return $this->getServiceLocator()->get('viewhelpermanager')->get($helperName);
+    }
+
+    // TODO : remove asap this adherence
+    public function getCoreOptions()
+    {
+        if (!$this->coreOptions) {
+            $this->setCoreOptions($this->getServiceLocator()->get('adfabcore_module_options'));
+        }
+
+        return $this->coreOptions;
+    }
+
+    public function setCoreOptions($options)
+    {
+        $this->coreOptions = $options;
+
+        return $this;
+    }
+
+    /**
+     * TODO remove this F&@king adherence with AdfabReward...
+     */
+    public function getRewardService()
+    {
+        if (!$this->rewardService) {
+            $this->rewardService = $this->getServiceLocator()->get('adfabreward_event_service');
+        }
+
+        return $this->rewardService;
+    }
+
+    public function setRewardService(GameService $rewardService)
+    {
+        $this->rewardService = $rewardService;
+
+        return $this;
+    }
+}
