@@ -640,7 +640,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
             $from,
             $record->getEmailAddress(),
             $subject,
-            'adfab-user/email/verification',
+            'adfab-user/frontend/email/verification',
             array('record' => $record, 'userFirstName' => $userFirstName)
         );
 
