@@ -510,13 +510,13 @@ class UserController extends ZfcUserController
             $formPassword->setData($prg);
             if (! $formPassword->isValid()) {
                 $messages = $formPassword->getMessages();
-                if ($messages['credential'] && $messages['credential']['isEmpty']) {
+                if (isset($messages['credential']) && isset($messages['credential']['isEmpty'])) {
                     $messages['credential']['isEmpty'] = 'Saisissez votre mot de passe actuel';
                 }
-                if ($messages['newCredential'] && $messages['newCredential']['isEmpty']) {
+                if (isset($messages['newCredential']) && isset($messages['newCredential']['isEmpty'])) {
                     $messages['newCredential']['isEmpty'] = 'Saisissez votre nouveau mot de passe';
                 }
-                if ($messages['newCredentialVerify'] && $messages['newCredentialVerify']['isEmpty']) {
+                if (isset($messages['newCredentialVerify']) && isset($messages['newCredentialVerify']['isEmpty'])) {
                     $messages['newCredentialVerify']['isEmpty'] = 'Confirmation du mot de passe ';
                 }
                 $formPassword->setMessages($messages);
@@ -770,7 +770,8 @@ class UserController extends ZfcUserController
         // Find the request key in the database
         $validation = $service->findByRequestKey($token);
         if (! $validation) {
-            throw new \InvalidArgumentException('Invalid Token r!');
+            //throw new \InvalidArgumentException('Invalid Token r!');
+			return $this->redirect()->toRoute('home');
         }
 
         return $this->forward()->dispatch('zfcuser', array(
