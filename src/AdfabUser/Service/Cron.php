@@ -5,7 +5,7 @@ namespace AdfabUser\Service;
 use Zend\ServiceManager\ServiceManagerAwareInterface;
 use Zend\ServiceManager\ServiceManager;
 use ZfcBase\EventManager\EventProvider;
-use AdfabGame\Options\ModuleOptions;
+use AdfabUser\Options\ModuleOptions;
 
 class Cron extends EventProvider implements ServiceManagerAwareInterface
 {
@@ -93,7 +93,7 @@ class Cron extends EventProvider implements ServiceManagerAwareInterface
     public function getOptions()
     {
         if (!$this->options instanceof ModuleOptions) {
-            $this->setOptions($this->getServiceManager()->get('adfabgame_module_options'));
+            $this->setOptions($this->getServiceManager()->get('adfabuser_module_options'));
         }
 
         return $this->options;
