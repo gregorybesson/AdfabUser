@@ -557,6 +557,22 @@ class UserController extends ZfcUserController
             $formEmail->setData($prg);
 
             if (! $formEmail->isValid()) {
+            	
+            	$messages = $formEmail->getMessages();
+                if (isset($messages['newIdentity']) && isset($messages['newIdentity']['isEmpty'])) {
+                    $messages['newIdentity']['isEmpty'] = 'Saisissez votre nouvel email';
+                }
+				if (isset($messages['newIdentity']) && isset($messages['newIdentity']['recordFound'])) {
+                    $messages['newIdentity']['recordFound'] = 'Cet email existe déjà';
+                }
+                if (isset($messages['newIdentityVerify']) && isset($messages['newIdentityVerify']['isEmpty'])) {
+                    $messages['newIdentityVerify']['isEmpty'] = 'Confirmer votre nouvel email';
+                }
+                if (isset($messages['newIdentityVerify']) && isset($messages['newIdentityVerify']['notSame'])) {
+                    $messages['newIdentityVerify']['notSame'] = 'Les deux emails ne correspondent pas';
+                }
+                $formEmail->setMessages($messages);
+				
                 return array(
                     'statusPassword' => null,
                     'changePasswordForm' => $formPassword,
