@@ -155,7 +155,7 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
     protected $updated_at;
 
     /**
-     * @ORM\Column(name="card_id",type="integer", nullable=true);
+     * @ORM\Column(name="card_id",type="bigint", nullable=true);
      */
     protected $cardId;
 
