@@ -70,6 +70,13 @@ class User extends ZfcUserMapper
             return $er->findBy(array('optin' => $optin));
         }
     }
+	
+	public function findOneBy($array)
+    {
+        $er = $this->em->getRepository($this->options->getUserEntityClass());
+
+        return $er->findOneBy($array);
+    }
 
     public function findAllBy($sortArray = array())
     {
