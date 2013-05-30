@@ -25,12 +25,14 @@ class LoadRoleData extends AbstractFixture implements OrderedFixtureInterface
     {
         $userRole = new Role();
         $userRole->setRoleId('user');
+        
         $manager->persist($userRole);
         $manager->flush();
         
         $adminRole = new Role();
         $adminRole->setRoleId('admin');
         $adminRole->setParent($userRole);
+        
         $manager->persist($adminRole);
         $manager->flush();
         
