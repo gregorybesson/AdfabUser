@@ -1,6 +1,7 @@
 <?php
 namespace AdfabUser\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
@@ -183,6 +184,11 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
      * @ORM\Column(name="date_set_softbouncerepeat", type="datetime", nullable=true)
      */
      protected $dateSetSoftbouncerepeat;
+
+	 /**
+     * @ORM\Column(name="registration_source", type="string", length=255, nullable=true)
+     */
+     protected $registrationSource;
 
     public function __construct()
     {
@@ -439,7 +445,7 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
     }
 
     /**
-     * @return the unknown_type
+     * @return the $dob
      */
     public function getDob()
     {
@@ -447,7 +453,7 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
     }
 
     /**
-     * @param unknown_type $dob
+     * @param field_type $dob
      */
     public function setDob($dob)
     {
@@ -795,6 +801,23 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
 
         return $this;
     }
+	/**
+     * Get registration_source
+     */
+    public function getRegistrationSource()
+    {
+        return $this->registrationSource;
+    }
+
+    /**
+     * Set registration_source
+     */
+    public function setRegistrationSource($registrationSource)
+    {
+        $this->registrationSource = $registrationSource;
+
+        return $this;
+    }
 
     /**
      * Convert the object to an array.
@@ -803,7 +826,13 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
      */
     public function getArrayCopy()
     {
-        return get_object_vars($this);
+        $obj_vars = get_object_vars($this);
+		
+		if (isset($obj_vars['dob']) && $obj_vars['dob'] != null) {
+            $obj_vars['dob'] = $obj_vars['dob']->format('d/m/Y');
+        }
+		
+        return $obj_vars;
     }
 
     /**
@@ -832,6 +861,10 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
         if (isset($data['postal_code']) && $data['postal_code'] != null) {
             $this->postal_code    = $data['postal_code'];
         }
+		
+		if (isset($data['dob']) && $data['dob'] != null) {
+			$this->dob = DateTime::createFromFormat('d/m/Y', $data['dob']);
+		}
 
         $this->optin    = (isset($data['optin'])) ? $data['optin'] : 0;
         $this->optinPartner    = (isset($data['optinPartner'])) ? $data['optinPartner'] : 0;
@@ -918,7 +951,7 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
 
             $todayYear = new \DateTime();
             $todayYear = $todayYear->format('Y');
-            $inputFilter->add($factory->createInput(array(
+            /*$inputFilter->add($factory->createInput(array(
                 'name'     => 'birth_year',
                 'required' => true,
                 'validators' => array(
@@ -930,6 +963,11 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
                         ),
                     ),
                 ),
+            )));*/
+			
+			$inputFilter->add($factory->createInput(array(
+                    'name' => 'dob',
+                    'required' => true,
             )));
 
             $inputFilter->add($factory->createInput(array(
