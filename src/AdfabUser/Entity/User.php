@@ -183,6 +183,11 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
      * @ORM\Column(name="date_set_softbouncerepeat", type="datetime", nullable=true)
      */
      protected $dateSetSoftbouncerepeat;
+	 
+	 /**
+     * @ORM\Column(name="registration_source", type="string", length=255, nullable=true)
+     */
+     protected $registrationSource;
 
     public function __construct()
     {
@@ -792,6 +797,24 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
     public function setDateSetSoftbouncerepeat($dateSetSoftbouncerepeat)
     {
         $this->dateSetSoftbouncerepeat = $dateSetSoftbouncerepeat;
+
+        return $this;
+    }
+	
+	/**
+     * Get registration_source
+     */
+    public function getRegistrationSource()
+    {
+        return $this->registrationSource;
+    }
+
+    /**
+     * Set registration_source
+     */
+    public function setRegistrationSource($registrationSource)
+    {
+        $this->registrationSource = $registrationSource;
 
         return $this;
     }
