@@ -28,6 +28,17 @@ class Module
         $translator = $sm->get('translator');
         AbstractValidator::setDefaultTranslator($translator,'adfabcore');
 
+        $doctrine = $sm->get('application_doctrine_em');
+        $evm = $doctrine->getEventManager();
+        
+        $listener = new  \Doctrine\ORM\Tools\ResolveTargetEntityListener();
+        $listener->addResolveTargetEntity(
+        		'AdfabUser\Entity\UserInterface',
+        		'AdfabUser\Entity\User',
+        		array()
+        );
+        $evm->addEventListener(\Doctrine\ORM\Events::loadClassMetadata, $listener);
+        
         //$options = $sm->get('zfcuser_module_options');
         //$reader = new AnnotationReader();
 
