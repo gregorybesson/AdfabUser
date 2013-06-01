@@ -17,7 +17,6 @@ interface UserInterface
     public function setPassword($password);
     public function getState();
     public function setState($state);
-    public function getRoles();
     public function addRole($role);
     public function getFirstname();
     public function setFirstname($firstname);
