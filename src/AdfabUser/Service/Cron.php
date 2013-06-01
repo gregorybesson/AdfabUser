@@ -27,28 +27,7 @@ class Cron extends EventProvider implements ServiceManagerAwareInterface
 
     public static function disableUser($interval = 0)
     {
-        $configuration = array(
-            'modules' => array(
-                'Application',
-                'DoctrineModule',
-                'DoctrineORMModule',
-                'ZfcBase',
-                'ZfcUser',
-                'BjyAuthorize',
-                'ZfcAdmin',
-                'AdfabCore',
-                'AdfabUser',
-            ),
-            'module_listener_options' => array(
-                'config_glob_paths'    => array(
-                    'config/autoload/{,*.}{global,local}.php',
-                ),
-                'module_paths' => array(
-                    './module',
-                    './vendor',
-                ),
-            ),
-        );
+        $configuration = require 'config/application.config.php';
         $smConfig = isset($configuration['service_manager']) ? $configuration['service_manager'] : array();
         $sm = new \Zend\ServiceManager\ServiceManager(new \Zend\Mvc\Service\ServiceManagerConfig($smConfig));
         $sm->setService('ApplicationConfig', $configuration);
@@ -72,8 +51,12 @@ class Cron extends EventProvider implements ServiceManagerAwareInterface
 
         $em = $this->getServiceManager()->get('zfcuser_doctrine_em');
 
+        // I Have to know what is the User Class used
+        $zfcUserOptions = $this->getServiceManager()->get('zfcuser_module_options');
+        $userClass = $zfcUserOptions->getUserEntityClass();
+        
         // Users with disable pending since n days
-        $query = $em->createQuery('SELECT u FROM AdfabUser\Entity\User u WHERE (u.updated_at <= :date AND u.state = 2)');
+        $query = $em->createQuery('SELECT u FROM ' . $userClass . ' u WHERE (u.updated_at <= :date AND u.state = 2)');
         $query->setParameter('date', $period);
         $usersToDisable = $query->getResult();
 
