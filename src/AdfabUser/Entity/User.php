@@ -11,13 +11,12 @@ use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
 use BjyAuthorize\Provider\Role\ProviderInterface;
-use ZfcUser\Entity\UserInterface;
 
 /**
  * @ORM\Entity @HasLifecycleCallbacks
  * @ORM\Table(name="user")
  */
-class User implements UserInterface, ProviderInterface, InputFilterAwareInterface
+class User implements \ZfcUser\Entity\UserInterface, ProviderInterface, InputFilterAwareInterface
 {
 
     protected $inputFilter;

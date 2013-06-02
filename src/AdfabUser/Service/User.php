@@ -86,8 +86,6 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
             $filter->remove('firstname');
             $filter->remove('lastname');
             $filter->remove('postal_code');
-            $filter->get('birth_year')->setRequired(FALSE);
-            $filter->get('children')->setRequired(FALSE);
             $form->setInputFilter($filter);
 
         }
@@ -184,9 +182,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $filter->remove('firstname');
         $filter->remove('lastname');
         $filter->remove('postal_code');
-        $filter->get('birth_year')->setRequired(FALSE);
-        $filter->get('children')->setRequired(FALSE);
-        $form->setInputFilter($filter);
+        $form->setInputFilter($filter); 
 
         // If avatar is set, I prepend the url path to the image
         if (isset($data['avatar'])) {
