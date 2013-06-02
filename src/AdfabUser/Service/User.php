@@ -182,7 +182,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $filter->remove('firstname');
         $filter->remove('lastname');
         $filter->remove('postal_code');
-        $form->setInputFilter($filter);
+        $form->setInputFilter($filter); 
 
         // If avatar is set, I prepend the url path to the image
         if (isset($data['avatar'])) {
