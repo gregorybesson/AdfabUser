@@ -132,7 +132,7 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
     /**
      * @ORM\Column(name="optin_partner",type="boolean", nullable=true)
      */
-    protected $optinPartner = 0; 
+    protected $optinPartner = 0;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)

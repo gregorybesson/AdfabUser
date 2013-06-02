@@ -30,8 +30,6 @@ interface UserInterface
     public function setDob($dob);
     public function getAvatar();
     public function setAvatar($avatar);
-    public function getChildren();
-    public function setChildren($children);
     public function getAddress();
     public function setAddress($address);
     public function getAddress2();
@@ -45,8 +43,6 @@ interface UserInterface
     public function setTelephone($telephone);
     public function getMobile();
     public function setMobile($mobile);
-    public function getBirthYear();
-    public function setBirthYear($birth_year);
     public function getOptin ();
     public function setOptin ($optin);
     public function getOptinPartner ();
@@ -55,16 +51,4 @@ interface UserInterface
     public function setCreatedAt($created_at);
     public function getUpdatedAt();
     public function setUpdatedAt($updated_at);
-    public function getCardId();
-    public function setCardId($cardId);
-    public function getOptinSms();
-    public function setOptinSms($optinSms);
-    public function getIsHardbounce();
-    public function setIsHardbounce($isHardbounce);
-    public function getDateSetHardbounce();
-    public function setDateSetHardbounce($dateSetHardbounce);
-    public function getIsSoftbouncerepeat();
-    public function setIsSoftbouncerepeat($isSoftbouncerepeat);
-    public function getDateSetSoftbouncerepeat();
-    public function setDateSetSoftbouncerepeat($dateSetSoftbouncerepeat);
 }
