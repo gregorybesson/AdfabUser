@@ -139,42 +139,6 @@ class ChangeInfo extends Register
                 ),
         ));
 
-        $years = array();
-        for ($i = (date('Y', time()) - 18) ; $i >= 1930 ; --$i) {
-            $years[$i] = $i;
-        }
-
-        $this->add(array(
-                'type' => 'Zend\Form\Element\Select',
-                'name' => 'birth_year',
-                'options' => array(
-                    'label' => $translator->translate('Year of Birth', 'adfabuser'),
-                    'value_options' => $years,
-                    'empty_option' => $translator->translate('Sélectionner', 'adfabuser'),
-                ),
-        ));
-
-        $this->add(array(
-            'type' => 'Zend\Form\Element\Select',
-            'name' => 'children',
-            'attributes' =>  array(
-                'id' => 'children',
-                'options' => array(
-                    '0' => 0,
-                    '1' => 1,
-                    '2' => 2,
-                    '3' => 3,
-                    '4' => 4,
-                    '5' => 5,
-                    '6' => 6,
-                ),
-            ),
-            'options' => array(
-                'empty_option' => $translator->translate('Select', 'adfabuser'),
-                'label' => $translator->translate('Children', 'adfabuser'),
-            ),
-        ));
-
         $this->add(array(
                 'name' => 'optin',
                 'type' => 'Zend\Form\Element\Radio',

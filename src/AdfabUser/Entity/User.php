@@ -80,19 +80,9 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
     protected $dob;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    protected $birth_year;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $avatar;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    protected $children;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -142,7 +132,7 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
     /**
      * @ORM\Column(name="optin_partner",type="boolean", nullable=true)
      */
-    protected $optinPartner = 0;
+    protected $optinPartner = 0; 
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -154,36 +144,6 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
      */
     protected $updated_at;
 
-    /**
-     * @ORM\Column(name="card_id",type="bigint", nullable=true);
-     */
-    protected $cardId;
-
-    /**
-     * @ORM\Column(name="optin_sms",type="boolean", nullable=true);
-     */
-    protected $optinSms = 0;
-
-    /**
-     * @ORM\Column(name="is_hardbounce",type="boolean", nullable=true);
-     */
-    protected $isHardbounce = 0;
-
-     /**
-     * @ORM\Column(name="date_set_hardbounce", type="datetime", nullable=true)
-     */
-     protected $dateSetHardbounce;
-
-     /**
-     * @ORM\Column(name="is_softbouncerepeat", type="boolean", nullable=true);
-     */
-     protected $isSoftbouncerepeat = 0;
-
-     /**
-     * @ORM\Column(name="date_set_softbouncerepeat", type="datetime", nullable=true)
-     */
-     protected $dateSetSoftbouncerepeat;
-	 
 	 /**
      * @ORM\Column(name="registration_source", type="string", length=255, nullable=true)
      */
@@ -480,24 +440,6 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
     }
 
     /**
-     * @return the unknown_type
-     */
-    public function getChildren()
-    {
-        return $this->children;
-    }
-
-    /**
-     * @param unknown_type $children
-     */
-    public function setChildren($children)
-    {
-        $this->children = $children;
-
-        return $this;
-    }
-
-    /**
      * @return the $address
      */
     public function getAddress()
@@ -606,22 +548,6 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
     }
 
     /**
-     * @return the $birth_year
-     */
-    public function getBirthYear()
-    {
-        return $this->birth_year;
-    }
-
-    /**
-     * @param field_type $birth_year
-     */
-    public function setBirthYear($birth_year)
-    {
-        $this->birth_year = $birth_year;
-    }
-
-    /**
      *
      * @return the $optin
      */
@@ -693,115 +619,7 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
         return $this;
     }
 
-    /**
-     * Get card_id
-     */
-    public function getCardId()
-    {
-        return $this->cardId;
-    }
-
-    /**
-     * Set card_id
-     */
-    public function setCardId($cardId)
-    {
-        $this->cardId = $cardId;
-
-        return $this;
-    }
-
-    /**
-     * Get optin_sms
-     */
-    public function getOptinSms()
-    {
-        return $this->optinSms;
-    }
-
-    /**
-     * Set optin_sms
-     */
-    public function setOptinSms($optinSms)
-    {
-        $this->optinSms = $optinSms;
-
-        return $this;
-    }
-
-    /**
-     * Get is_hardbounce
-     */
-    public function getIsHardbounce()
-    {
-        return $this->isHardbounce;
-    }
-
-    /**
-     * Set is_hardbounce
-     */
-    public function setIsHardbounce($isHardbounce)
-    {
-        $this->isHardbounce = $isHardbounce;
-
-        return $this;
-    }
-
-    /**
-     * Get date_set_hardbounce
-     */
-    public function getDateSetHardbounce()
-    {
-        return $this->dateSetHardbounce;
-    }
-
-    /**
-     * Set date_set_hardbounce
-     */
-    public function setDateSetHardbounce($dateSetHardbounce)
-    {
-        $this->dateSetHardbounce = $dateSetHardbounce;
-
-        return $this;
-    }
-
-    /**
-     * Get is_softbouncerepeat
-     */
-    public function getIsSoftbouncerepeat()
-    {
-        return $this->isSoftbouncerepeat;
-    }
-
-    /**
-     * Set is_softbouncerepeat
-     */
-    public function setIsSoftbouncerepeat($isSoftbouncerepeat)
-    {
-        $this->isSoftbouncerepeat = $isSoftbouncerepeat;
-
-        return $this;
-    }
-
-    /**
-     * Get date_set_softbouncerepeat
-     */
-    public function getDateSetSoftbouncerepeat()
-    {
-        return $this->dateSetSoftbouncerepeat;
-    }
-
-    /**
-     * Set date_set_softbouncerepeat
-     */
-    public function setDateSetSoftbouncerepeat($dateSetSoftbouncerepeat)
-    {
-        $this->dateSetSoftbouncerepeat = $dateSetSoftbouncerepeat;
-
-        return $this;
-    }
-	
-	/**
+ 	/**
      * Get registration_source
      */
     public function getRegistrationSource()
@@ -849,16 +667,12 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
         if (isset($data['state']) && $data['state'] != null) {
             $this->state    = $data['state'];
         }
-        if (isset($data['birth_year']) && $data['birth_year'] != null) {
-            $this->birth_year    = $data['birth_year'];
-        }
         if (isset($data['postal_code']) && $data['postal_code'] != null) {
             $this->postal_code    = $data['postal_code'];
         }
 
         $this->optin    = (isset($data['optin'])) ? $data['optin'] : 0;
         $this->optinPartner    = (isset($data['optinPartner'])) ? $data['optinPartner'] : 0;
-
         $this->username    = (isset($data['username'])) ? $data['username'] : null;
         $this->email       = (isset($data['email'])) ? $data['email'] : null;
         $this->displayName = (isset($data['displayName'])) ? $data['displayName'] : null;
@@ -869,7 +683,6 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
         $this->address2    = (isset($data['address2'])) ? $data['address2'] : null;
         $this->city        = (isset($data['city'])) ? $data['city'] : null;
         $this->telephone   = (isset($data['telephone'])) ? $data['telephone'] : null;
-        $this->children    = (isset($data['children'])) ? $data['children'] : null;
     }
 
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -887,7 +700,7 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
                     'name'       => 'id',
                     'required'   => true,
                     'filters' => array(
-                            array('name'    => 'Int'),
+                        array('name'    => 'Int'),
                     ),
             )));
 
@@ -939,22 +752,6 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
                 ),
             )));
 
-            $todayYear = new \DateTime();
-            $todayYear = $todayYear->format('Y');
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'birth_year',
-                'required' => true,
-                'validators' => array(
-                    array(
-                        'name'    => 'Between',
-                        'options' => array(
-                            'min' => 1900,
-                            'max' => $todayYear,
-                        ),
-                    ),
-                ),
-            )));
-
             $inputFilter->add($factory->createInput(array(
                 'name'     => 'postal_code',
                 'required' => true,
@@ -972,11 +769,6 @@ class User implements UserInterface, ProviderInterface, InputFilterAwareInterfac
             $inputFilter->add($factory->createInput(array(
                 'name'     => 'title',
                 'required' => false,
-            )));
-
-            $inputFilter->add($factory->createInput(array(
-                    'name'     => 'children',
-                    'required' => false,
             )));
 
             $inputFilter->add($factory->createInput(array(
