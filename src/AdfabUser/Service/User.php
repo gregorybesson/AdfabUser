@@ -86,8 +86,6 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
             $filter->remove('firstname');
             $filter->remove('lastname');
             $filter->remove('postal_code');
-            $filter->get('birth_year')->setRequired(FALSE);
-            $filter->get('children')->setRequired(FALSE);
             $form->setInputFilter($filter);
 
         }
@@ -184,9 +182,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $filter->remove('firstname');
         $filter->remove('lastname');
         $filter->remove('postal_code');
-        $filter->get('birth_year')->setRequired(FALSE);
-        $filter->get('children')->setRequired(FALSE);
-        $form->setInputFilter($filter);
+        $form->setInputFilter($filter); 
 
         // If avatar is set, I prepend the url path to the image
         if (isset($data['avatar'])) {
@@ -251,8 +247,8 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
     /**
      * Register the user (associated with a default). It can be a social registration
      *
-     * @param  array                              $data
-     * @return \Adfabuser\Entity\User
+     * @param  array $data
+     * @return \Adfabuser\Entity\UserInterface
      * @throws Exception\InvalidArgumentException
      */
     public function register(array $data)
@@ -272,7 +268,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
 
         // This email is already associated with another user
         $noObjectExistsValidator = new NoObjectExistsValidator(array(
-            'object_repository' => $entityManager->getRepository('AdfabUser\Entity\User'),
+            'object_repository' => $entityManager->getRepository($class),
             'fields'            => 'email',
             'messages'          => array('objectFound' => 'This email already exists !')
         ));
@@ -430,7 +426,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
      * Update user informations
      *
      * @param array                  $data
-     * @param \AdfabUser\Entity\User $user
+     * @param \AdfabUser\Entity\UserInterface $user
      */
     public function updateInfo(array $data, $user)
     {
@@ -502,7 +498,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
      * Update user address informations
      *
      * @param array                  $data
-     * @param \AdfabUser\Entity\User $user
+     * @param \AdfabUser\Entity\UserInterface $user
      */
     public function updateAddress(array $data, $user)
     {
@@ -571,9 +567,13 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         if ($search != '') {
             $filterSearch = " AND (u.username like '%" . $search . "%' OR u.lastname like '%" . $search . "%' OR u.firstname like '%" . $search . "%' OR u.email like '%" . $search . "%')";
         }
+        
+        // I Have to know what is the User Class used
+        $zfcUserOptions = $this->getServiceManager()->get('zfcuser_module_options');
+        $userClass = $zfcUserOptions->getUserEntityClass();
 
         $query = $em->createQuery('
-            SELECT u FROM AdfabUser\Entity\User u
+            SELECT u FROM ' . $userClass . ' u
             JOIN u.roles r
             WHERE r.id = :role' .
             $filterSearch .
