@@ -53,6 +53,7 @@ return array(
 
     // Frontend Change Info
     'Select' => 'Sélectionner',
+	'Date of birth' => 'Date de naissance',
 
     // Admin
     'Home' => 'Accueil',

@@ -164,6 +164,20 @@ class User extends Register
                         'placeholder' => $translator->translate('Telephone', 'adfabuser'),
                 ),
         ));
+		
+		$this->add(array(
+            'type' => 'Zend\Form\Element\DateTime',
+            'name' => 'dob',
+            'options' => array(
+                'label' => $translator->translate('Date of birth', 'adfabuser'),
+                'format' => 'd/m/Y'
+            ),
+            'attributes' => array(
+                'type' => 'text',
+                'placeholder' => $translator->translate('Date of birth', 'adfabuser'),
+                'class'=> 'date-birth'
+            )
+        ));
 
         $this->add(array(
                 'name' => 'optin',
