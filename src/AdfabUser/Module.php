@@ -30,7 +30,8 @@ class Module
 
         $doctrine = $sm->get('application_doctrine_em');
         $evm = $doctrine->getEventManager();
-        
+
+        /* In some cases, this listener overrides those described further in application.config.php
         $listener = new  \Doctrine\ORM\Tools\ResolveTargetEntityListener();
         $listener->addResolveTargetEntity(
         		'AdfabUser\Entity\UserInterface',
@@ -38,7 +39,8 @@ class Module
         		array()
         );
         $evm->addEventListener(\Doctrine\ORM\Events::loadClassMetadata, $listener);
-        
+        */
+
         //$options = $sm->get('zfcuser_module_options');
         //$reader = new AnnotationReader();
 

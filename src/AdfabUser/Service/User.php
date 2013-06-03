@@ -3,6 +3,7 @@
 namespace AdfabUser\Service;
 
 use AdfabUser\Entity\UserProvider;
+
 use Zend\Form\Form;
 use Zend\ServiceManager\ServiceManagerAwareInterface;
 use Zend\ServiceManager\ServiceManager;
