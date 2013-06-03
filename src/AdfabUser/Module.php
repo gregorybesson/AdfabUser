@@ -31,6 +31,7 @@ class Module
         $doctrine = $sm->get('application_doctrine_em');
         $evm = $doctrine->getEventManager();
 
+
         /* In some cases, this listener overrides those described further in application.config.php
         $listener = new  \Doctrine\ORM\Tools\ResolveTargetEntityListener();
         $listener->addResolveTargetEntity(
