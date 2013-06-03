@@ -88,22 +88,18 @@ class Register extends \ZfcUser\Form\Register
             )
         ));
 
-        $years = array();
-        for ($i = (date('Y', time()) - 18) ; $i >= 1930 ; --$i) {
-            $years[$i] = $i;
-        }
-
         $this->add(array(
-                'type' => 'Zend\Form\Element\Select',
-                'name' => 'birth_year',
-                'options' => array(
-                    'label' => $translator->translate('Year of Birth', 'adfabuser'),
-                    'value_options' => $years,
-                    'empty_option' => $translator->translate('Sélectionner', 'adfabuser'),
-                ),
-                'attributes' => array(
-                    'class' => 'required',
-                ),
+			'type' => 'Zend\Form\Element\DateTime',
+			'name' => 'dob',
+			'options' => array(
+				'label' => $translator->translate('Date of birth', 'adfabuser'),
+				'format' => 'd/m/Y'
+			),
+			'attributes' => array(
+				'type' => 'text',
+				'placeholder' => $translator->translate('Date of birth', 'adfabuser'),
+				'class'=> 'date required'
+			)
         ));
 
         $this->add(array(

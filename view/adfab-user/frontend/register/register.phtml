@@ -111,10 +111,10 @@
 					</div>
 					<?php endif;?>
 					<div class="row-fluid">
-						<div class="block-left span4"><?php echo $form->get('birth_year')->getLabel(); ?> <span>*</span> :</div>
+						<div class="block-left span4"><?php echo $form->get('dob')->getLabel(); ?><span>*</span> :</div>
 						<div class="block-right span7 register-select mobile">
-							<?php echo $this->formSelect($form->get('birth_year')) ?>
-					        <?php echo $this->formElementErrors($form->get('birth_year')) ?>
+							<?php echo $this->formDateTime($form->get('dob')) ?>
+							<?php echo $this->formElementErrors($form->get('dob')) ?>
                             <img src="<?php echo $this->basePath('images/common/form-no.png') ?>" class="form-no form-no-select">
 						</div>
 					</div>

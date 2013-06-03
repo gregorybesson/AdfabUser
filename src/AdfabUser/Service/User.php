@@ -86,6 +86,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
             $filter->remove('firstname');
             $filter->remove('lastname');
             $filter->remove('postal_code');
+			$filter->remove('dob');
             $form->setInputFilter($filter);
 
         }
@@ -117,6 +118,12 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
 
         if (!isset($data['username']) || $data['username'] == '' ) {
             $data['username'] = ucfirst($data['firstname']) . " " . substr(ucfirst($data['lastname']),0,1);
+        }
+		
+		// Convert birth date format
+		if (isset($data['dob']) && $data['dob']) {
+            $tmpDate = \DateTime::createFromFormat('d/m/Y', $data['dob']);
+            $data['dob'] = $tmpDate->format('Y-m-d');
         }
 
         $form->setData($data);
@@ -182,6 +189,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $filter->remove('firstname');
         $filter->remove('lastname');
         $filter->remove('postal_code');
+		$filter->remove('dob');
         $form->setInputFilter($filter); 
 
         // If avatar is set, I prepend the url path to the image
@@ -192,6 +200,12 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
 
         if (!isset($data['username']) || $data['username'] == '' ) {
             $data['username'] = ucfirst($data['firstname']) . " " . substr(ucfirst($data['lastname']),0,1);
+        }
+		
+		// Convert birth date format
+		if (isset($data['dob']) && $data['dob']) {
+            $tmpDate = \DateTime::createFromFormat('d/m/Y', $data['dob']);
+            $data['dob'] = $tmpDate->format('Y-m-d');
         }
 
         $form->bind($user);
@@ -257,6 +271,12 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $class = $zfcUserOptions->getUserEntityClass();
         $user  = new $class;
         $form  = $this->getRegisterForm();
+		
+		// Convert birth date format
+		if (isset($data['dob']) && $data['dob']) {
+            $tmpDate = \DateTime::createFromFormat('d/m/Y', $data['dob']);
+            $data['dob'] = $tmpDate->format('Y-m-d');
+        }
         $form->setHydrator($this->getServiceManager()->get('zfcuser_register_form_hydrator'));
         $form->bind($user);
         $form->setData($data);
@@ -441,7 +461,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $avatarUrl = $this->getOptions()->getAvatarUrl() . '/';
 
         // If avatar is set, I prepend the url path to the image
-        $filename=null;
+        $fileName=null;
         if (isset($data['avatar'])) {
             $fileName = $data['avatar'];
             $data['avatar'] = $avatarUrl . $fileName;
@@ -449,6 +469,12 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
 
         if (!isset($data['username']) || $data['username'] == '' ) {
             $data['username'] = ucfirst($data['firstname']) . " " . substr(ucfirst($data['lastname']),0,1);
+        }
+		
+		// Convert birth date format
+		if (isset($data['dob']) && $data['dob']) {
+            $tmpDate = \DateTime::createFromFormat('d/m/Y', $data['dob']);
+            $data['dob'] = $tmpDate->format('Y-m-d');
         }
 
         $form->setData($data);

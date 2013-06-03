@@ -256,6 +256,15 @@
 					<p class="orange-points">+ 150 pts</p>
 				</div>
 			</div>
+			
+			<div class="row-fluid">
+				<div class="span4">
+					<p><?php echo $formInfo->get('dob')->getLabel(); ?><span class="red">*</span> :</p></div>
+				<div class="span6">
+					<?php echo $this->formDateTime($formInfo->get('dob')) ?>
+					<?php echo $this->formElementErrors($formInfo->get('dob')) ?>
+				</div>
+			</div>
 			<?php //echo $this->formInput($formInfo->get('submit')); ?>
 			<input type="submit" class="btn btn-success" value="Valider"/>
 		</div>

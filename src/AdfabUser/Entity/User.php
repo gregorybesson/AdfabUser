@@ -1,6 +1,7 @@
 <?php
 namespace AdfabUser\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
@@ -644,7 +645,13 @@ class User implements \ZfcUser\Entity\UserInterface, ProviderInterface, InputFil
      */
     public function getArrayCopy()
     {
-        return get_object_vars($this);
+        $obj_vars = get_object_vars($this);
+		
+		if (isset($obj_vars['dob']) && $obj_vars['dob'] != null) {
+            $obj_vars['dob'] = $obj_vars['dob']->format('d/m/Y');
+        }
+		
+        return $obj_vars;
     }
 
     /**
@@ -670,6 +677,10 @@ class User implements \ZfcUser\Entity\UserInterface, ProviderInterface, InputFil
         if (isset($data['postal_code']) && $data['postal_code'] != null) {
             $this->postal_code    = $data['postal_code'];
         }
+		
+		if (isset($data['dob']) && $data['dob'] != null) {
+			$this->dob = DateTime::createFromFormat('d/m/Y', $data['dob']);
+		}
 
         $this->optin    = (isset($data['optin'])) ? $data['optin'] : 0;
         $this->optinPartner    = (isset($data['optinPartner'])) ? $data['optinPartner'] : 0;
@@ -750,6 +761,17 @@ class User implements \ZfcUser\Entity\UserInterface, ProviderInterface, InputFil
                         ),
                     ),
                 ),
+            )));
+			
+			$inputFilter->add($factory->createInput(array(
+                'name' => 'dob',
+                'required' => true,
+                /*'validators' => array(
+					array(
+						'name' => 'Date',
+						'format' => 'd/m/Y',
+					),
+				),*/
             )));
 
             $inputFilter->add($factory->createInput(array(

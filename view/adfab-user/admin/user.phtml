@@ -54,6 +54,12 @@ $form->prepare();
 	            <?php echo $this->formSelect($form->get('roleId')); ?>
 	            <?php echo $this->formElementErrors($form->get('roleId')) ?>
 	        </div>
+			
+			<div class="label-input">
+	            <?php echo $this->formLabel($form->get('dob')); ?>
+				<?php echo $this->formDateTime($form->get('dob')) ?>
+				<?php echo $this->formElementErrors($form->get('dob')) ?>
+	        </div>
         </div>
         <div class="tab-pane" id="address">
         	<div class="label-input">
