@@ -104,9 +104,19 @@ class UserController extends ZfcUserController
                 $form->setAttribute('action', $this->url()->fromRoute('zfcuser/register', array('socialnetwork' => $socialnetwork)));
                 $form->remove('password');
                 $form->remove('passwordVerify');
+				
+				$birthMonth = $infoMe->birthMonth;
+				if (strlen($birthMonth) <= 1){
+					$birthMonth = '0'.$birthMonth;
+				}
+				$birthDay = $infoMe->birthDay;
+				if (strlen($birthDay) <= 1){
+					$birthDay = '0'.$birthDay;
+				}
 
                 $params = array(
-                    'birth_year'  => $infoMe->birthYear,
+                    //'birth_year'  => $infoMe->birthYear,
+                    'dob'   	  => $birthDay.'/'.$birthMonth.'/'.$infoMe->birthYear,
                     'firstname'   => $infoMe->firstName,
                     'lastname'    => $infoMe->lastName,
                     'email'       => $infoMe->email,
