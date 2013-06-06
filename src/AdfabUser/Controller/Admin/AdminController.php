@@ -5,6 +5,9 @@ namespace AdfabUser\Controller\Admin;
 use Zend\Mvc\Controller\AbstractActionController;
 use AdfabUser\Options\ModuleOptions;
 use Zend\View\Model\ViewModel;
+use Zend\Paginator\Paginator;
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 
 class AdminController extends AbstractActionController
 {
@@ -18,15 +21,12 @@ class AdminController extends AbstractActionController
 
         $role 		= $this->getAdminUserService()->getRoleMapper()->findByRoleId($roleId);
 
-        $users = $this->getAdminUserService()->getUsersByRole($role, $filter, $search);
+        $adapter = new DoctrineAdapter(new ORMPaginator($this->getAdminUserService()->getQueryUsersByRole($role, $filter, $search)));
 
-        if (is_array($users)) {
-            $paginator = new \Zend\Paginator\Paginator(new \Zend\Paginator\Adapter\ArrayAdapter($users));
-            $paginator->setItemCountPerPage(100);
-            $paginator->setCurrentPageNumber($this->getEvent()->getRouteMatch()->getParam('p'));
-        } else {
-            $paginator = $users;
-        }
+        $paginator = new Paginator($adapter);
+        $paginator->setItemCountPerPage(100);
+        $paginator->setCurrentPageNumber($this->getEvent()->getRouteMatch()->getParam('p'));
+
 
         return new ViewModel(
             array(

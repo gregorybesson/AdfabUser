@@ -584,28 +584,34 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
 
         return $user;
     }
-
-    public function getUsersByRole($role=1, $order='DESC', $search='')
+    
+    public function getQueryUsersByRole($role=1, $order='DESC', $search='')
     {
         $em = $this->getServiceManager()->get('zfcuser_doctrine_em');
         $filterSearch = '';
-
+    
         if ($search != '') {
             $filterSearch = " AND (u.username like '%" . $search . "%' OR u.lastname like '%" . $search . "%' OR u.firstname like '%" . $search . "%' OR u.email like '%" . $search . "%')";
         }
-        
+    
         // I Have to know what is the User Class used
         $zfcUserOptions = $this->getServiceManager()->get('zfcuser_module_options');
         $userClass = $zfcUserOptions->getUserEntityClass();
-
+    
         $query = $em->createQuery('
             SELECT u FROM ' . $userClass . ' u
             JOIN u.roles r
             WHERE r.id = :role' .
-            $filterSearch .
-            ' ORDER BY u.created_at '.$order.'
+                $filterSearch .
+                ' ORDER BY u.created_at '.$order.'
         ');
         $query->setParameter('role', $role);
+        return $query;
+    }
+
+    public function getUsersByRole($role=1, $order='DESC', $search='')
+    {
+        $query = $this->getQueryUsersByRole();
         $result = $query->getResult();
         //die(print $query->getSQL());
         return $result;
