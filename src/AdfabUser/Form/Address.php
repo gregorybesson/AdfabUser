@@ -24,7 +24,6 @@ class Address extends Register
         $this->remove('passwordVerify');
         $this->remove('username');
 		$this->remove('dob');
-		$this->setValidationGroup('lastname', 'firstname', 'address', 'postal_code', 'city');
 
         $this->add(array(
             'name' => 'lastname',

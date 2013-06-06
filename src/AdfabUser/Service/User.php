@@ -539,7 +539,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $filter = $user->getInputFilter();
         $filter->remove('password');
         $filter->remove('passwordVerify');
-        $filter->remove('birth_year');
+        $filter->remove('dob');
 
         $form->setInputFilter($filter);
 
