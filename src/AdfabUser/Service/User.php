@@ -301,7 +301,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
             $tmpDate = \DateTime::createFromFormat('d/m/Y', $data['dob']);
             $data['dob'] = $tmpDate->format('Y-m-d');
         }
-
+        
         $form->bind($user);
         $form->setData($data);
         // Fetch any valid object manager from the Service manager (here, an entity manager)
