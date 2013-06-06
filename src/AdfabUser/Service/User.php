@@ -129,6 +129,11 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $form->setData($data);
 
         if (!$form->isValid()) {
+        	if (isset($data['dob']) && $data['dob']) {
+	            $tmpDate = \DateTime::createFromFormat('Y-m-d', $data['dob']);
+	            $data['dob'] = $tmpDate->format('d/m/Y');
+				$form->setData(array('dob' => $data['dob']));
+	        }
             return false;
         }
 
@@ -143,15 +148,23 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
 
         if ($fileName) {
             $adapter = new \Zend\File\Transfer\Adapter\Http();
-            $size = new Size(array('max'=>2000000));
+            $size = new Size(array('max'=>'500kb'));
             $adapter->setValidators(array($size), $fileName);
 
             if (!$adapter->isValid()) {
                 $dataError = $adapter->getMessages();
+				if(isset($dataError['fileSizeTooBig'])) {
+					$dataError['fileSizeTooBig'] = 'Votre fichier dépasse le poids autorisé';
+				}
                 $error = array();
                 foreach ($dataError as $key=>$row) {
                     $error[] = $row;
                 }
+				if (isset($data['dob']) && $data['dob']) {
+		            $tmpDate = \DateTime::createFromFormat('Y-m-d', $data['dob']);
+		            $data['dob'] = $tmpDate->format('d/m/Y');
+					$form->setData(array('dob' => $data['dob']));
+		        }
                 $form->setMessages(array('avatar'=>$error ));
             } else {
                 $adapter->setDestination($avatarPath);
@@ -210,6 +223,15 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
 
         $form->bind($user);
         $form->setData($data);
+		
+		if (!$form->isValid()) {
+        	if (isset($data['dob']) && $data['dob']) {
+	            $tmpDate = \DateTime::createFromFormat('Y-m-d', $data['dob']);
+	            $data['dob'] = $tmpDate->format('d/m/Y');
+				$form->setData(array('dob' => $data['dob']));
+	        }
+            return false;
+        }
 
         // updating roles in the entity
         $role = null;
@@ -218,44 +240,46 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         } elseif (count($user->getRoles()) == 0) {
             $role = $roleMapper->findByRoleId($defaultRegisterRole);
         }
-
-        if ($form->isValid()) {
-            if ($fileName) {
-                $adapter = new \Zend\File\Transfer\Adapter\Http();
-                $size = new Size(array('max'=>2000000));
-                $adapter->setValidators(array($size), $fileName);
-
-                if (!$adapter->isValid()) {
-                    $dataError = $adapter->getMessages();
-                    $error = array();
-                    foreach ($dataError as $key=>$row) {
-                        $error[] = $row;
-                    }
-                    $form->setMessages(array('avatar'=>$error ));
-                } else {
-                    $adapter->setDestination($path);
-                    if ($adapter->receive($fileName)) {
-                        if ($role) {
-                            $this->getUserMapper()->clearRoles($user);
-                            $user->addRole($role);
-                        }
-                        $user = $this->getUserMapper()->update($user);
-
-                        return $user;
-                    }
+		
+		if ($fileName) {
+            $adapter = new \Zend\File\Transfer\Adapter\Http();
+            $size = new Size(array('max'=>'500kb'));
+            $adapter->setValidators(array($size), $fileName);
+            if (!$adapter->isValid()) {
+                $dataError = $adapter->getMessages();
+				if(isset($dataError['fileSizeTooBig'])) {
+					$dataError['fileSizeTooBig'] = 'Votre fichier dépasse le poids autorisé';
+				}
+                $error = array();
+                foreach ($dataError as $key=>$row) {
+                    $error[] = $row;
                 }
+				if (isset($data['dob']) && $data['dob']) {
+		            $tmpDate = \DateTime::createFromFormat('Y-m-d', $data['dob']);
+		            $data['dob'] = $tmpDate->format('d/m/Y');
+					$form->setData(array('dob' => $data['dob']));
+		        }
+                $form->setMessages(array('avatar'=>$error ));
             } else {
-                if ($role) {
-                    $this->getUserMapper()->clearRoles($user);
-                    $user->addRole($role);
+                $adapter->setDestination($path);
+                if ($adapter->receive($fileName)) {
+                    if ($role) {
+                        $this->getUserMapper()->clearRoles($user);
+                        $user->addRole($role);
+                    }
+                    $user = $this->getUserMapper()->update($user);
+                    return $user;
                 }
-                $user = $this->getUserMapper()->update($user);
-
-                return $user;
             }
-        }
+        } else {
+            if ($role) {
+                $this->getUserMapper()->clearRoles($user);
+                $user->addRole($role);
+            }
+            $user = $this->getUserMapper()->update($user);
 
-        return false;
+            return $user;
+        }
     }
 
     /**
@@ -301,6 +325,11 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $form->setInputFilter($filter);
 
         if (!$form->isValid()) {
+        	if (isset($data['dob']) && $data['dob']) {
+	            $tmpDate = \DateTime::createFromFormat('Y-m-d', $data['dob']);
+	            $data['dob'] = $tmpDate->format('d/m/Y');
+				$form->setData(array('dob' => $data['dob']));
+	        }
             return false;
         }
 
@@ -485,20 +514,33 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $form->setInputFilter($filter);
 
         if (!$form->isValid()) {
+        	if (isset($data['dob']) && $data['dob']) {
+	            $tmpDate = \DateTime::createFromFormat('Y-m-d', $data['dob']);
+	            $data['dob'] = $tmpDate->format('d/m/Y');
+				$form->setData(array('dob' => $data['dob']));
+	        }
             return false;
         }
 
         if ($fileName) {
             $adapter = new \Zend\File\Transfer\Adapter\Http();
-            $size = new Size(array('max'=>2000000));
+            $size = new Size(array('max'=>'500kb'));
             $adapter->setValidators(array($size), $fileName);
 
             if (!$adapter->isValid()) {
                 $dataError = $adapter->getMessages();
+				if(isset($dataError['fileSizeTooBig'])) {
+					$dataError['fileSizeTooBig'] = 'Votre fichier dépasse le poids autorisé';
+				}
                 $error = array();
                 foreach ($dataError as $key=>$row) {
                     $error[] = $row;
                 }
+				if (isset($data['dob']) && $data['dob']) {
+		            $tmpDate = \DateTime::createFromFormat('Y-m-d', $data['dob']);
+		            $data['dob'] = $tmpDate->format('d/m/Y');
+					$form->setData(array('dob' => $data['dob']));
+		        }
                 $form->setMessages(array('avatar'=>$error ));
             } else {
                 $adapter->setDestination($avatarPath);
