@@ -60,6 +60,8 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $class = $zfcUserOptions->getUserEntityClass();
         $user  = new $class;
         $form  = $this->getServiceManager()->get('adfabuseradmin_register_form');
+        $form->get('dob')->setOptions(array('format' => 'Y-m-d'));
+        
         $form->bind($user);
 
         $avatarPath = $this->getOptions()->getAvatarPath() . DIRECTORY_SEPARATOR;
@@ -192,6 +194,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $roleMapper           = $this->getRoleMapper();
         $defaultRegisterRole  = $this->getOptions()->getDefaultRegisterRole();
         $form                 = $this->getServiceManager()->get('adfabuseradmin_register_form');
+        $form->get('dob')->setOptions(array('format' => 'Y-m-d'));
         $fileName             = null;
 
         // remove passord fields validation
@@ -295,6 +298,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $class = $zfcUserOptions->getUserEntityClass();
         $user  = new $class;
         $form  = $this->getRegisterForm();
+        $form->get('dob')->setOptions(array('format' => 'Y-m-d'));
 		
 		// Convert birth date format
 		if (isset($data['dob']) && $data['dob']) {
@@ -484,6 +488,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $zfcUserOptions = $this->getServiceManager()->get('zfcuser_module_options');
 
         $form  = $this->getServiceManager()->get('adfabuser_change_info_form');
+        $form->get('dob')->setOptions(array('format' => 'Y-m-d'));
         $form->bind($user);
 
         $avatarPath = $this->getOptions()->getAvatarPath() . DIRECTORY_SEPARATOR;

@@ -679,7 +679,7 @@ class User implements \ZfcUser\Entity\UserInterface, ProviderInterface, InputFil
         }
 		
 		if (isset($data['dob']) && $data['dob'] != null) {
-			$this->dob = DateTime::createFromFormat('d/m/Y', $data['dob']);
+			$this->dob = DateTime::createFromFormat('Y-m-d', $data['dob']);
 		}
 
 		if (isset($data['optin']) && $data['optin'] != null) {
