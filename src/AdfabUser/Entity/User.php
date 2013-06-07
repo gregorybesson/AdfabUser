@@ -718,6 +718,9 @@ class User implements \ZfcUser\Entity\UserInterface, ProviderInterface, InputFil
 		if (isset($data['telephone']) && $data['telephone'] != null) {
 			$this->telephone    = $data['telephone'];
 		}
+		if (isset($data['mobile']) && $data['mobile'] != null) {
+			$this->mobile    = $data['mobile'];
+		}
     }
  
     public function setInputFilter(InputFilterInterface $inputFilter)
