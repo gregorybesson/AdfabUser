@@ -76,13 +76,21 @@ class ForgotController extends AbstractActionController
                 $email = $this->getRequest()->getPost()->get('email');
                 $user = $userService->getUserMapper()->findByEmail($email);
 
+                $vm = new ViewModel();
+                $vm->setTemplate('adfab-user/frontend/forgot/sent');
                 //only send request when email is found
                 if ($user != null) {
                     $service->sendProcessForgotRequest($user->getId(), $email);
+                    $vm->setVariables(array(
+                    	'statusMail' => true,
+                    	'email' => $email
+                    ));
+                } else {
+                	$vm->setVariables(array(
+                		'statusMail' => false,
+                		'email' => $email
+                	));
                 }
-
-                $vm = new ViewModel(array('email' => $email));
-                $vm->setTemplate('adfab-user/frontend/forgot/sent');
 
                 return $vm;
             } else {
