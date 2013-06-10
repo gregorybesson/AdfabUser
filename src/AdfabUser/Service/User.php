@@ -585,7 +585,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         return $user;
     }
     
-    public function getQueryUsersByRole($role=1, $order='DESC', $search='')
+    public function getQueryUsersByRole($role=1, $order=null, $search='')
     {
         $em = $this->getServiceManager()->get('zfcuser_doctrine_em');
         $filterSearch = '';
@@ -603,7 +603,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
             JOIN u.roles r
             WHERE r.id = :role' .
                 $filterSearch .
-                ' ORDER BY u.created_at '.$order.'
+                (in_array($order,'ASC','DESC')?' ORDER BY u.created_at '.$order:'').'
         ');
         $query->setParameter('role', $role);
         return $query;
