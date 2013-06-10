@@ -20,18 +20,7 @@
 <table class="table">
     <tr>
         <!-- <th><?php echo $this->translate('Id'); ?></th> -->
-        <th>
-        	Création
-        	<?php if($this->filter == 'ASC'): ?>
-        	    <a href="<?php echo $this->url('zfcadmin/adfabuser/list', array('roleId' => $this->roleId, 'filter' => 'DESC')); ?>">
-        	    	<img src="/images/admin/arrow-down.png" alt="" />
-        	    </a>
-			<?php else : ?>
-				<a href="<?php echo $this->url('zfcadmin/adfabuser/list', array('roleId' => $this->roleId, 'filter' => 'ASC')); ?>">
-					<img src="/images/admin/arrow-up.png" alt="" />
-				</a>
-        	<?php endif; ?>
-	    </th>
+        <th><?php echo $this->translate('Création'); ?></th>
         <th><?php echo $this->translate('Adresse Email'); ?></th>
         <th><?php echo $this->translate('Pseudo'); ?></th>
         <th><?php echo $this->translate('Prénom'); ?></th>
