@@ -650,7 +650,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
             JOIN u.roles r
             WHERE r.id = :role' .
                 $filterSearch .
-                (in_array($order,'ASC','DESC')?' ORDER BY u.created_at '.$order:'').'
+                (in_array($order,array('ASC','DESC'))?' ORDER BY u.created_at '.$order:'').'
         ');
         $query->setParameter('role', $role);
         return $query;
