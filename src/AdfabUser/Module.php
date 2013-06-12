@@ -28,7 +28,7 @@ class Module
         $translator = $sm->get('translator');
         AbstractValidator::setDefaultTranslator($translator,'adfabcore');
 
-        $doctrine = $sm->get('application_doctrine_em');
+        $doctrine = $sm->get('zfcuser_doctrine_em');
         $evm = $doctrine->getEventManager();
 
 
