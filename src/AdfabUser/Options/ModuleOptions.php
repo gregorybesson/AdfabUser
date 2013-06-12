@@ -20,6 +20,13 @@ class ModuleOptions extends BaseModuleOptions implements
      * @var string
      */
     protected $social = array();
+    
+    /**
+     * @var bool
+     * true = create user automaticaly after social authentication
+     * false = data are extracted from the social id and sent to a registration form
+     */
+    protected $createUserAutoSocial = false;
 
     /**
      * @var string
@@ -282,6 +289,16 @@ class ModuleOptions extends BaseModuleOptions implements
     public function getCreateUserAutoPassword()
     {
         return $this->createUserAutoPassword;
+    }
+    
+    public function setCreateUserAutoSocial($createUserAutoSocial)
+    {
+    	$this->createUserAutoSocial = $createUserAutoSocial;
+    }
+    
+    public function getCreateUserAutoSocial()
+    {
+    	return $this->createUserAutoSocial;
     }
 
     public function setCookieExpire($seconds)

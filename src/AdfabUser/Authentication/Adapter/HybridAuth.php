@@ -52,6 +52,11 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
      * @var EventManagerInterface
      */
     protected $events;
+    
+    /**
+     * @var RoleMapperInterface
+     */
+    protected $roleMapper;
 
     public function authenticate(AuthEvent $authEvent)
     {
@@ -96,11 +101,8 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
         }
 
         $localUserProvider = $this->getMapper()->findUserByProviderId($userProfile->identifier, $provider);
-
-        // TODO : A implémenter mais en prenant en compte les champs mandatory de l'appli.
-        // Ces lignes permettent d'enregistrer auto qlq quand il est loggé sur un réseau accepté par l'appli
-        // et qu'il y a demande d'authentif.
-        /*if (false == $localUserProvider) {
+        
+        if (false == $localUserProvider && $this->getOptions()->getCreateUserAutoSocial()) {
             $method = $provider.'ToLocalUser';
             if (method_exists($this, $method)) {
                 try {
@@ -120,12 +122,13 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
                 if ($userProfile->emailVerified) $localUser->setEmail($userProfile->emailVerified);
                 $result = $this->insert($localUser, 'other', $userProfile);
             }
-            $localUserProvider = clone($this->getMapper()->getEntityPrototype());
+            
+            $localUserProvider = new \AdfabUser\Entity\UserProvider();
             $localUserProvider->setUserId($localUser->getId())
                 ->setProviderId($userProfile->identifier)
                 ->setProvider($provider);
             $this->getMapper()->insert($localUserProvider);
-        }*/
+        }
 
         $zfcUserOptions = $this->getZfcUserOptions();
 
@@ -441,10 +444,15 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
         // If user state is enabled, set the default state value
         if ($zfcUserOptions->getEnableUserState()) {
             if ($zfcUserOptions->getDefaultUserState()) {
-                $user->setState($zfcUserOptions->getDefaultUserState());
+                $user->setState((int) $zfcUserOptions->getDefaultUserState());
             }
         }
 
+        $roleMapper          = $this->getRoleMapper();
+        $defaultRegisterRole = $this->getOptions()->getDefaultRegisterRole();
+        $role = $roleMapper->findByRoleId($defaultRegisterRole);
+        $user->addRole($role);
+        
         $options = array(
             'user'          => $user,
             'provider'      => $provider,
@@ -489,5 +497,19 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
         }
 
         return $this->events;
+    }
+    
+    /**
+     * getRoleMapper
+     *
+     * @return UserMapperInterface
+     */
+    public function getRoleMapper()
+    {
+    	if (null === $this->roleMapper) {
+    		$this->roleMapper = $this->getServiceManager()->get('adfabuser_role_mapper');
+    	}
+    
+    	return $this->roleMapper;
     }
 }

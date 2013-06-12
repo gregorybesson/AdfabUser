@@ -7,6 +7,10 @@ interface UserCreateOptionsInterface
     public function getCreateUserAutoPassword();
 
     public function setCreateUserAutoPassword($createUserAutoPassword);
+    
+    public function getCreateUserAutoSocial();
+    
+    public function setCreateUserAutoSocial($createUserAutoSocial);
 
     public function getCreateFormElements();
 
