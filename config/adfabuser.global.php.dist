@@ -8,6 +8,13 @@ $adfabuser = array(
         'default_register_role' => 'user',
         
         /**
+	     * @var bool
+	     * true = create user automatically after social authentication
+	     * false = data are extracted from the social id and sent to a registration form
+	     */
+	    'createUserAutoSocial' => false,
+        
+        /**
          * Email Address that will appear in the 'From' of outbound emails
          *
          * Default: empty
