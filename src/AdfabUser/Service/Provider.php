@@ -172,7 +172,7 @@ class Provider implements ServiceManagerAwareInterface, EventManagerAwareInterfa
             		->setMessages(array('Invalid provider'));
             		$this->setSatisfied(false);
 
-            		return false;
+            		return null;
             	}
             }
         }
