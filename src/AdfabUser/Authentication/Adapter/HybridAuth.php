@@ -89,7 +89,6 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
         } catch (\Exception $ex) {
         	// The following retry is efficient in case a user previously registered on his social account
         	// with the app has unsubsribed from the app
-        	//
         	// cf http://hybridauth.sourceforge.net/userguide/HybridAuth_Sessions.html
 
         	if ( ($ex->getCode() == 6) || ($ex->getCode() == 7) ){
