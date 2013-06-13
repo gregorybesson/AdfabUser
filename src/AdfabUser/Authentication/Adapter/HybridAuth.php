@@ -75,16 +75,33 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
             return false;
         }
 
+        $userProfile = null;
         try {
-            $hybridAuth = $this->getHybridAuth();
-            $adapter = $hybridAuth->authenticate($provider);
-            $userProfile = $adapter->getUserProfile();
+            $adapter = $this->getHybridAuth()->authenticate($provider);
+            if ($adapter->isUserConnected()) {
+            	$userProfile = $HybridAdapter->getUserProfile();
+            }
         } catch (\Exception $ex) {
-            $authEvent->setCode(Result::FAILURE)
-              ->setMessages(array('Invalid provider'));
-            $this->setSatisfied(false);
+        	// The following retry is efficient in case a user previously registered on his social account
+        	// with the app has unsubsribed from the app
+        	//
+        	// cf http://hybridauth.sourceforge.net/userguide/HybridAuth_Sessions.html
 
-            return false;
+        	if ( ($ex->getCode() == 6) || ($ex->getCode() == 7) ){
+        		// Réinitialiser la session HybridAuth
+        		$this->getHybridAuth()->getAdapter($provider)->logout();
+        		// Essayer de se connecter à nouveau
+        		$adapter = $this->getHybridAuth()->authenticate($provider);
+        		if ($adapter->isUserConnected()) {
+        			$userProfile = $HybridAdapter->getUserProfile();
+        		}
+        	} else{
+        		$authEvent->setCode(Result::FAILURE)
+        		->setMessages(array('Invalid provider'));
+        		$this->setSatisfied(false);
+
+        		return false;
+        	}
         }
 
         if (!$userProfile) {
