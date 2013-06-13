@@ -52,7 +52,7 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
      * @var EventManagerInterface
      */
     protected $events;
-    
+
     /**
      * @var RoleMapperInterface
      */
@@ -80,16 +80,33 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
             return false;
         }
 
+        $userProfile = null;
         try {
-            $hybridAuth = $this->getHybridAuth();
-            $adapter = $hybridAuth->authenticate($provider);
-            $userProfile = $adapter->getUserProfile();
+            $adapter = $this->getHybridAuth()->authenticate($provider);
+            if ($adapter->isUserConnected()) {
+            	$userProfile = $adapter->getUserProfile();
+            }
         } catch (\Exception $ex) {
-            $authEvent->setCode(Result::FAILURE)
-              ->setMessages(array('Invalid provider'));
-            $this->setSatisfied(false);
+        	// The following retry is efficient in case a user previously registered on his social account
+        	// with the app has unsubsribed from the app
+        	//
+        	// cf http://hybridauth.sourceforge.net/userguide/HybridAuth_Sessions.html
 
-            return false;
+        	if ( ($ex->getCode() == 6) || ($ex->getCode() == 7) ){
+        		// Réinitialiser la session HybridAuth
+        		$this->getHybridAuth()->getAdapter($provider)->logout();
+        		// Essayer de se connecter à nouveau
+        		$adapter = $this->getHybridAuth()->authenticate($provider);
+        		if ($adapter->isUserConnected()) {
+        			$userProfile = $adapter->getUserProfile();
+        		}
+        	} else{
+        		$authEvent->setCode(Result::FAILURE)
+        		->setMessages(array('Invalid provider'));
+        		$this->setSatisfied(false);
+
+        		return false;
+        	}
         }
 
         if (!$userProfile) {
@@ -101,7 +118,7 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
         }
 
         $localUserProvider = $this->getMapper()->findUserByProviderId($userProfile->identifier, $provider);
-        
+
         if (false == $localUserProvider && $this->getOptions()->getCreateUserAutoSocial()) {
             $method = $provider.'ToLocalUser';
             if (method_exists($this, $method)) {
@@ -122,7 +139,7 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
                 if ($userProfile->emailVerified) $localUser->setEmail($userProfile->emailVerified);
                 $result = $this->insert($localUser, 'other', $userProfile);
             }
-            
+
             $localUserProvider = new \AdfabUser\Entity\UserProvider();
             $localUserProvider->setUserId($localUser->getId())
                 ->setProviderId($userProfile->identifier)
@@ -452,7 +469,7 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
         $defaultRegisterRole = $this->getOptions()->getDefaultRegisterRole();
         $role = $roleMapper->findByRoleId($defaultRegisterRole);
         $user->addRole($role);
-        
+
         $options = array(
             'user'          => $user,
             'provider'      => $provider,
@@ -498,7 +515,7 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
 
         return $this->events;
     }
-    
+
     /**
      * getRoleMapper
      *
@@ -509,7 +526,7 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
     	if (null === $this->roleMapper) {
     		$this->roleMapper = $this->getServiceManager()->get('adfabuser_role_mapper');
     	}
-    
+
     	return $this->roleMapper;
     }
 }
