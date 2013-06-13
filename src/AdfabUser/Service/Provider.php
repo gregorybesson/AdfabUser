@@ -147,10 +147,33 @@ class Provider implements ServiceManagerAwareInterface, EventManagerAwareInterfa
     public function getInfoMe($socialnetworktype, $options = array())
     {
         $infoMe = null;
+        $provider = ucfirst(strtolower($socialnetworktype));
         if (is_string($socialnetworktype)) {
-            $HybridAdapter = $this->getHybridAuth()->authenticate(ucfirst(strtolower($socialnetworktype)));
-            if ($HybridAdapter->isUserConnected()) {
-                $infoMe = $HybridAdapter->getUserProfile();
+            try {
+            	$adapter = $this->getHybridAuth()->authenticate($provider);
+            	if ($adapter->isUserConnected()) {
+            		$infoMe = $adapter->getUserProfile();
+            	}
+            } catch (\Exception $ex) {
+            	// The following retry is efficient in case a user previously registered on his social account
+            	// with the app has unsubsribed from the app
+            	// cf http://hybridauth.sourceforge.net/userguide/HybridAuth_Sessions.html
+
+            	if ( ($ex->getCode() == 6) || ($ex->getCode() == 7) ){
+            		// Réinitialiser la session HybridAuth
+            		$this->getHybridAuth()->getAdapter($provider)->logout();
+            		// Essayer de se connecter à nouveau
+            		$adapter = $this->getHybridAuth()->authenticate($provider);
+            		if ($adapter->isUserConnected()) {
+            			$infoMe = $adapter->getUserProfile();
+            		}
+            	} else{
+            		$authEvent->setCode(Result::FAILURE)
+            		->setMessages(array('Invalid provider'));
+            		$this->setSatisfied(false);
+
+            		return false;
+            	}
             }
         }
 
