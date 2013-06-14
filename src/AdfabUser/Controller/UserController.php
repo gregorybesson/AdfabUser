@@ -101,7 +101,9 @@ class UserController extends ZfcUserController
                 
                 if ($user || $service->getOptions()->getCreateUserAutoSocial() == true) {
                     //on le dirige vers l'action d'authentification
-                    if(! $redirect && $this->getOptions()->getLoginRedirectRoute() != '') $redirect = $this->getOptions()->getLoginRedirectRoute();
+                    if(! $redirect && $this->getOptions()->getLoginRedirectRoute() != ''){
+                    	$redirect = $this->url()->fromRoute($this->getOptions()->getLoginRedirectRoute());
+                    }
                     $redir = $this->url()
                         ->fromRoute('zfcuser/login') .'/' . $socialnetwork . ($redirect ? '?redirect=' . $redirect : '');
 
