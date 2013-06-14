@@ -43,6 +43,7 @@ $form->setAttribute('id', 'header-login');
     			<div id="new-account" class="row-fluid">
     				<p>
     					<a href="<?php echo $this->url('zfcuser/register') . ($this->redirect ? '?redirect='.$this->redirect : '') ?>">Créer un compte</a>
+    					<a href="<?php echo $this->url('zfcuser/register',array('socialnetwork' => 'facebook')) . ($this->redirect ? '?redirect='.$this->redirect : '');?>" class="fbconnect-header"><img src="<?php echo $this->basePath('images/header/fb-connect.png') ?>" alt="Facebook Connect" /></a>
     				</p>
     			</div>
     			<?php endif; ?>
