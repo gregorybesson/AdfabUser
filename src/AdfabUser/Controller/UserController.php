@@ -122,9 +122,17 @@ class UserController extends ZfcUserController
 				if (strlen($birthDay) <= 1){
 					$birthDay = '0'.$birthDay;
 				}
+				$title = '';
+				$gender = $infoMe->gender;
+				if($gender == 'female'){
+					$title = 'Me';
+				} else {
+					$title = 'M';
+				}
 
                 $params = array(
                     //'birth_year'  => $infoMe->birthYear,
+                    'title' 	  => $title,
                     'dob'   	  => $birthDay.'/'.$birthMonth.'/'.$infoMe->birthYear,
                     'firstname'   => $infoMe->firstName,
                     'lastname'    => $infoMe->lastName,
