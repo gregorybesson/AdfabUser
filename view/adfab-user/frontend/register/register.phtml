@@ -43,7 +43,7 @@
 					</div>
 					<div id="fb-connect" class="span7">
 						<p class="fb-connect-label"><?php echo $this->translate('Gagnez du temps avec facebook connect')?></p>
-						<p><a href="<?php echo $this->url('zfcuser/register',array('socialnetwork' => 'facebook'));?>"><img src="<?php echo $this->basePath('images/common/fb-connect.png') ?>" alt="Facebook Connect" /></a></p>
+						<p><a href="<?php echo $this->url('zfcuser/register',array('socialnetwork' => 'facebook')) . ($this->redirect ? '?redirect='.$this->redirect : '');?>"><img src="<?php echo $this->basePath('images/common/fb-connect.png') ?>" alt="Facebook Connect" /></a></p>
 					</div>
 				</div>
 				

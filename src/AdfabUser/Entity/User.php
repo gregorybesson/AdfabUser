@@ -16,7 +16,7 @@ use BjyAuthorize\Provider\Role\ProviderInterface;
 
 /**
  * @ORM\Entity @HasLifecycleCallbacks
- * @ORM\Table(name="user")
+ * @ORM\Table(name="user",indexes={@ORM\Index(name="idx_state", columns={"state"})})
  */
 class User implements \ZfcUser\Entity\UserInterface, ProviderInterface, InputFilterAwareInterface
 {
@@ -661,7 +661,7 @@ class User implements \ZfcUser\Entity\UserInterface, ProviderInterface, InputFil
      */
     public function populate($data = array())
     {
-        if (isset($data['id']) && $data['id'] != null) {
+   		if (isset($data['id']) && $data['id'] != null) {
             $this->id    = $data['id'];
         }
 
@@ -674,28 +674,55 @@ class User implements \ZfcUser\Entity\UserInterface, ProviderInterface, InputFil
         if (isset($data['state']) && $data['state'] != null) {
             $this->state    = $data['state'];
         }
-        if (isset($data['postal_code']) && $data['postal_code'] != null) {
+        if (isset($data['postal_code'])) {
             $this->postal_code    = $data['postal_code'];
         }
 		
 		if (isset($data['dob']) && $data['dob'] != null) {
-			$this->dob = DateTime::createFromFormat('d/m/Y', $data['dob']);
+			$this->dob = DateTime::createFromFormat('Y-m-d', $data['dob']);
 		}
 
-        $this->optin    = (isset($data['optin'])) ? $data['optin'] : 0;
-        $this->optinPartner    = (isset($data['optinPartner'])) ? $data['optinPartner'] : 0;
-        $this->username    = (isset($data['username'])) ? $data['username'] : null;
-        $this->email       = (isset($data['email'])) ? $data['email'] : null;
-        $this->displayName = (isset($data['displayName'])) ? $data['displayName'] : null;
-        $this->firstname   = (isset($data['firstname'])) ? $data['firstname'] : null;
-        $this->lastname    = (isset($data['lastname'])) ? $data['lastname'] : null;
-        $this->title       = (isset($data['title'])) ? $data['title'] : null;
-        $this->address     = (isset($data['address'])) ? $data['address'] : null;
-        $this->address2    = (isset($data['address2'])) ? $data['address2'] : null;
-        $this->city        = (isset($data['city'])) ? $data['city'] : null;
-        $this->telephone   = (isset($data['telephone'])) ? $data['telephone'] : null;
+		if (isset($data['optin']) && $data['optin'] != null) {
+			$this->optin    = $data['optin'];
+		}
+		if (isset($data['optinPartner']) && $data['optinPartner'] != null) {
+			$this->optinPartner    = $data['optinPartner'];
+		}
+		if (isset($data['username']) && $data['username'] != null) {
+			$this->username    = $data['username'];
+		}
+		if (isset($data['email']) && $data['email'] != null) {
+			$this->email    = $data['email'];
+		}
+		if (isset($data['displayName']) && $data['displayName'] != null) {
+			$this->displayName    = $data['displayName'];
+		}
+		if (isset($data['firstname']) && $data['firstname'] != null) {
+			$this->firstname    = $data['firstname'];
+		}
+		if (isset($data['lastname']) && $data['lastname'] != null) {
+			$this->lastname    = $data['lastname'];
+		}
+		if (isset($data['title']) && $data['title'] != null) {
+			$this->title    = $data['title'];
+		}
+		if (isset($data['address']) && $data['address'] != null) {
+			$this->address    = $data['address'];
+		}
+		if (isset($data['address2'])) {
+			$this->address2    = $data['address2'];
+		}
+		if (isset($data['city']) && $data['city'] != null) {
+			$this->city    = $data['city'];
+		}
+		if (isset($data['telephone']) && $data['telephone'] != null) {
+			$this->telephone    = $data['telephone'];
+		}
+		if (isset($data['mobile']) && $data['mobile'] != null) {
+			$this->mobile    = $data['mobile'];
+		}
     }
-
+ 
     public function setInputFilter(InputFilterInterface $inputFilter)
     {
         throw new \Exception("Not used");

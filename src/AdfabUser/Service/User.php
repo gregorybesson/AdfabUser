@@ -60,6 +60,8 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $class = $zfcUserOptions->getUserEntityClass();
         $user  = new $class;
         $form  = $this->getServiceManager()->get('adfabuseradmin_register_form');
+        $form->get('dob')->setOptions(array('format' => 'Y-m-d'));
+        
         $form->bind($user);
 
         $avatarPath = $this->getOptions()->getAvatarPath() . DIRECTORY_SEPARATOR;
@@ -192,6 +194,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $roleMapper           = $this->getRoleMapper();
         $defaultRegisterRole  = $this->getOptions()->getDefaultRegisterRole();
         $form                 = $this->getServiceManager()->get('adfabuseradmin_register_form');
+        $form->get('dob')->setOptions(array('format' => 'Y-m-d'));
         $fileName             = null;
 
         // remove passord fields validation
@@ -295,13 +298,14 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $class = $zfcUserOptions->getUserEntityClass();
         $user  = new $class;
         $form  = $this->getRegisterForm();
+        $form->get('dob')->setOptions(array('format' => 'Y-m-d'));
 		
 		// Convert birth date format
 		if (isset($data['dob']) && $data['dob']) {
             $tmpDate = \DateTime::createFromFormat('d/m/Y', $data['dob']);
             $data['dob'] = $tmpDate->format('Y-m-d');
         }
-        $form->setHydrator($this->getServiceManager()->get('zfcuser_register_form_hydrator'));
+        
         $form->bind($user);
         $form->setData($data);
         // Fetch any valid object manager from the Service manager (here, an entity manager)
@@ -484,6 +488,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $zfcUserOptions = $this->getServiceManager()->get('zfcuser_module_options');
 
         $form  = $this->getServiceManager()->get('adfabuser_change_info_form');
+        $form->get('dob')->setOptions(array('format' => 'Y-m-d'));
         $form->bind($user);
 
         $avatarPath = $this->getOptions()->getAvatarPath() . DIRECTORY_SEPARATOR;
@@ -627,7 +632,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         return $user;
     }
     
-    public function getQueryUsersByRole($role=1, $order='DESC', $search='')
+    public function getQueryUsersByRole($role=1, $order=null, $search='')
     {
         $em = $this->getServiceManager()->get('zfcuser_doctrine_em');
         $filterSearch = '';
@@ -645,7 +650,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
             JOIN u.roles r
             WHERE r.id = :role' .
                 $filterSearch .
-                ' ORDER BY u.created_at '.$order.'
+                (in_array($order,array('ASC','DESC'))?' ORDER BY u.created_at '.$order:'').'
         ');
         $query->setParameter('role', $role);
         return $query;

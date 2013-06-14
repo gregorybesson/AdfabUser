@@ -85,6 +85,12 @@ class UserController extends ZfcUserController
         $form->setAttribute('action', $this->url()->fromRoute('zfcuser/register'));
         $params = array();
         $socialCredentials = array();
+        
+        if ($this->getOptions()->getUseRedirectParameterIfPresent() && $request->getQuery()->get('redirect')) {
+        	$redirect = $request->getQuery()->get('redirect');
+        } else {
+        	$redirect = false;
+        }
 
         if ($socialnetwork) {
             $infoMe = null;
@@ -92,9 +98,12 @@ class UserController extends ZfcUserController
 
             if (!empty($infoMe)) {
                 $user = $this->getProviderService()->getUserProviderMapper()->findUserByProviderId($infoMe->identifier, $socialnetwork);
-                if ($user) {
-
+                
+                if ($user || $service->getOptions()->getCreateUserAutoSocial() == true) {
                     //on le dirige vers l'action d'authentification
+                    if(! $redirect && $this->getOptions()->getLoginRedirectRoute() != ''){
+                    	$redirect = $this->url()->fromRoute($this->getOptions()->getLoginRedirectRoute());
+                    }
                     $redir = $this->url()
                         ->fromRoute('zfcuser/login') .'/' . $socialnetwork . ($redirect ? '?redirect=' . $redirect : '');
 
@@ -127,12 +136,6 @@ class UserController extends ZfcUserController
                     'socialId'      => $infoMe->identifier,
                 );
             }
-        }
-
-        if ($this->getOptions()->getUseRedirectParameterIfPresent() && $request->getQuery()->get('redirect')) {
-            $redirect = $request->getQuery()->get('redirect');
-        } else {
-            $redirect = false;
         }
 
         $redirectUrl = $this->url()->fromRoute('zfcuser/register') .($socialnetwork ? '/' . $socialnetwork : ''). ($redirect ? '?redirect=' . $redirect : '');
