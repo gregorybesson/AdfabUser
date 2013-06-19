@@ -68,6 +68,15 @@ $form->setAttribute('class', 'validate');
 				<?php echo $this->formElementErrors($form->get('postal_code')) ?>
 			</div>
 		</label>
+		<label id="country" class="row-fluid">
+			<div class="block-left span4">
+				<?php echo $form->get('country')->getLabel(); ?> :
+			</div>
+			<div class="block-right span7">
+				<?php echo $this->formSelect($form->get('country')) ?>
+				<?php echo $this->formElementErrors($form->get('country')) ?>
+			</div>
+		</label>
 		<div class="center win">
     		<button type="submit" class="btn btn-warning">
     			<span class="arrow-right">Valider mes coordonnées</span>

@@ -116,6 +116,11 @@ class User implements \ZfcUser\Entity\UserInterface, ProviderInterface, InputFil
     protected $city;
 
     /**
+     * @ORM\Column(type="string", length=2, nullable=true)
+     */
+    protected $country;
+    
+    /**
      * @var \Doctrine\Common\Collections\Collection
      * @ORM\ManyToMany(targetEntity="AdfabUser\Entity\Role")
      * @ORM\JoinTable(name="user_role",
@@ -503,6 +508,22 @@ class User implements \ZfcUser\Entity\UserInterface, ProviderInterface, InputFil
     {
         $this->city = $city;
     }
+    
+    /**
+     * @return the $country
+     */
+    public function getCountry()
+    {
+    	return $this->country;
+    }
+    
+    /**
+     * @param field_type $country
+     */
+    public function setCountry($country)
+    {
+    	$this->country = $country;
+    }
 
     /**
      * @param Ambigous <Role, \Doctrine\Common\Collections\ArrayCollection> $roles
@@ -814,6 +835,21 @@ class User implements \ZfcUser\Entity\UserInterface, ProviderInterface, InputFil
                     ),
                 ),*/
             )));
+            
+            $inputFilter->add(array(
+            	'name'       => 'country',
+            	'required'   => false,
+           		'filters'    => array(array('name' => 'StringTrim')),
+           		'validators' => array(
+       				array(
+           				'name'    => 'StringLength',
+           				'options' => array(
+           					'min' => 2,
+       						'max' => 2,
+       					),
+           			),
+           		),
+            ));
 
             $inputFilter->add($factory->createInput(array(
                 'name'     => 'title',
