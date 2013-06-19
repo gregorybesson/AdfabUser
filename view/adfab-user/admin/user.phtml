@@ -87,6 +87,12 @@ $form->prepare();
 	            <?php echo $this->formInput($form->get('telephone')); ?>
 	            <?php echo $this->formElementErrors($form->get('telephone')) ?>
 	        </div>
+			<div class="label-input">
+	            <?php echo $this->formLabel($form->get('country')); ?>
+	            <?php echo $this->formSelect($form->get('country')); ?>
+	            <?php echo $this->formElementErrors($form->get('country')) ?>
+	        </div>
+		</label>
         </div>
         <div class="tab-pane" id="newsletter">
             <div class="label-input">
