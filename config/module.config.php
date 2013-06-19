@@ -454,7 +454,7 @@ return array(
 
             'newsletter' => array(
                 'label' => 'Newsletter',
-                'route' => 'newsletter',
+                'route' => 'zfcuser/newsletter',
                 'controller' => 'adfabuser_user',
                 'action'     => 'newsletter',
             ),
