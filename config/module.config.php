@@ -24,11 +24,11 @@ return array(
             )
         )
     ),
-		
+
 	'data-fixture' => array(
-		'location' => __DIR__ . '/../src/AdfabUser/DataFixtures/ORM',
+		'AdfabUser_fixture' => __DIR__ . '/../src/AdfabUser/DataFixtures/ORM',
 	),
-		
+
     'core_layout' => array(
         'AdfabUser' => array(
             'default_layout' => 'layout/2columns-left',
