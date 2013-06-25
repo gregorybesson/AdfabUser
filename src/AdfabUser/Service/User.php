@@ -351,7 +351,9 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
 
         if ($zfcUserOptions->getEnableUsername()) {
             if (!isset($data['username']) || $data['username'] == '' ) {
-                $user->setUsername(ucfirst($data['firstname']) . " " . substr(ucfirst($data['lastname']),0,1));
+                if(isset($data['firstname']) && isset($data['lastname'])){
+                	$user->setUsername(ucfirst($data['firstname']) . " " . substr(ucfirst($data['lastname']),0,1));
+				}
             } else {
                 $user->setUsername($data['username']);
             }
