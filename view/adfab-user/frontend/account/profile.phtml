@@ -244,6 +244,19 @@
 					<p class="orange-points">+ 75 pts</p>
 				</div>
 			</div>
+			
+			<div class="row-fluid">
+				<div class="span4">
+					<p><?php echo $formInfo->get('country')->getLabel(); ?> :</p>
+				</div>
+				<div class="span6">
+					<?php echo $this->formSelect($formInfo->get('country')) ?>
+					<?php echo $this->formElementErrors($formInfo->get('country')) ?>
+				</div>
+				<div class="span2">
+					<p class="orange-points">+ 0 pts</p>
+				</div>
+			</div>
 
 			<div class="row-fluid">
 				<div class="span4">
