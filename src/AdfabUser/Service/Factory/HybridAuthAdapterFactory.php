@@ -14,7 +14,13 @@ class HybridAuthAdapterFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $services)
     {
-        $hybridAuth = $services->get('HybridAuth');
+     	try{
+    		$config = $services->get('SocialConfig');
+    		$hybridAuth = new \Hybrid_Auth($config);
+        }catch(\Exception $e){
+			// In some cases (ie. FB registration, the user refuses the options)
+        	$hybridAuth = null;
+        }
 
         $moduleOptions = $services->get('adfabuser_module_options');
         $zfcUserOptions = $services->get('zfcuser_module_options');

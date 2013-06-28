@@ -238,7 +238,12 @@ class Module
                 'HybridAuth' => function($sm) {
                     $config = $sm->get('SocialConfig');
 
-                    return new \Hybrid_Auth($config);
+                   try{
+                    	$auth = new \Hybrid_Auth($config);
+                    }catch(\Exception $e){
+                    	throw new \Exception($e->getMessage(), $e->getCode());
+                    }
+                    return $auth;
                 },
 
                 'adfabuser_module_options' => function ($sm) {

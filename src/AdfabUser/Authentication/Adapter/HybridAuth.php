@@ -186,13 +186,17 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
         return $this->hybridAuth;
     }
 
-    /**
+	/**
      * Set the Hybrid_Auth object
      *
      * @param  Hybrid_Auth    $hybridAuth
      * @return UserController
+     * 
+     * CAUTION : the type of the parameter is Hybrid_Auth but can be NULL if an error is catched during
+     * the creation of the object in the factory (ie. FB : I refuse the options given on registration => error)
+     * In this type of case, getHybridAuth use the serviceManager to grab a new HybridAuth instance
      */
-    public function setHybridAuth(Hybrid_Auth $hybridAuth)
+    public function setHybridAuth( $hybridAuth)
     {
         $this->hybridAuth = $hybridAuth;
 
