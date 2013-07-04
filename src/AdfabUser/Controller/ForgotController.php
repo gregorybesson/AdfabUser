@@ -138,6 +138,28 @@ class ForgotController extends AbstractActionController
                 $vm->setTemplate('adfab-user/frontend/forgot/passwordchanged');
 
                 return $vm;
+            } else {
+                $messages = $form->getMessages();
+                if (isset($messages['newCredential'])) {
+                    if(isset($messages['newCredential']['isEmpty'])) {
+                        $messages['newCredential']['isEmpty'] = 'Enter your new password';
+                    }
+                    if(isset($messages['newCredential']['stringLengthTooShort'])) {
+                        $messages['newCredential']['stringLengthTooShort'] = 'Your password contains less than 6 characters';
+                    }
+                }
+                if (isset($messages['newCredentialVerify'])){
+                    if(isset($messages['newCredentialVerify']['isEmpty'])) {
+                        $messages['newCredentialVerify']['isEmpty'] = 'Confirm your password';
+                    }
+                    if(isset($messages['newCredentialVerify']['stringLengthTooShort'])) {
+                        $messages['newCredentialVerify']['stringLengthTooShort'] = 'Your password contains less than 6 characters';
+                    }
+                    if(isset($messages['newCredentialVerify']['notSame'])){
+                        $messages['newCredentialVerify']['notSame'] = 'Your passwords are different';
+                    }
+                }
+                $form->setMessages($messages);
             }
         }
 
