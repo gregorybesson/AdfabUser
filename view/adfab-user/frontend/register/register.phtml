@@ -88,7 +88,7 @@
 						</div>
 					</div>
 					<?php //I do hide these fields on Facebook registration ?>
-					<?php if($form->get('password')):?>
+					<?php if($form->has('password')):?>
 					<div class="row-fluid">
 						<div class="block-left span4"><?php echo $form->get('password')->getLabel(); ?> <span>*</span> :<br/>
 							<span class="annotation">6 caractères minimum</span>

@@ -59,7 +59,7 @@ class UserProvider extends AbstractDbMapper
         $userProvider = $this->findUserByProviderId($hybridUserProfile->identifier, $provider);
 
         if (false != $userProvider) {
-            if ($user->getId() == $userProvider->getUserId()) {
+            if ($user->getId() == $userProvider->getUser()->getId()) {
                 // already linked
                 return;
             }
@@ -67,7 +67,7 @@ class UserProvider extends AbstractDbMapper
         }
 
         $userProvider = clone($this->getEntityPrototype());
-        $userProvider->setUserId($user->getId())
+        $userProvider->setUser($user)
                      ->setProviderId($hybridUserProfile->identifier)
                      ->setProvider($provider);
         $this->insert($userProvider);
@@ -81,7 +81,7 @@ class UserProvider extends AbstractDbMapper
      */
     public function insert($entity, $tableName = null, HydratorInterface $hydrator = null)
     {
-//        print_r('on y est : ' . $entity->getUserId() . ' ' . $entity->getProvider() . ' ' . $entity->getProviderId());
+//        print_r('on y est : ' . $entity->getUser()->getId() . ' ' . $entity->getProvider() . ' ' . $entity->getProviderId());
         return $this->persist($entity);
     }
 

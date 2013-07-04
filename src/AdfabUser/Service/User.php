@@ -61,7 +61,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $user  = new $class;
         $form  = $this->getServiceManager()->get('adfabuseradmin_register_form');
         $form->get('dob')->setOptions(array('format' => 'Y-m-d'));
-        
+
         $form->bind($user);
 
         $avatarPath = $this->getOptions()->getAvatarPath() . DIRECTORY_SEPARATOR;
@@ -121,7 +121,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         if (!isset($data['username']) || $data['username'] == '' ) {
             $data['username'] = ucfirst($data['firstname']) . " " . substr(ucfirst($data['lastname']),0,1);
         }
-		
+
 		// Convert birth date format
 		if (isset($data['dob']) && $data['dob']) {
             $tmpDate = \DateTime::createFromFormat('d/m/Y', $data['dob']);
@@ -206,7 +206,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $filter->remove('lastname');
         $filter->remove('postal_code');
 		$filter->remove('dob');
-        $form->setInputFilter($filter); 
+        $form->setInputFilter($filter);
 
         // If avatar is set, I prepend the url path to the image
         if (isset($data['avatar'])) {
@@ -217,7 +217,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         if (!isset($data['username']) || $data['username'] == '' ) {
             $data['username'] = ucfirst($data['firstname']) . " " . substr(ucfirst($data['lastname']),0,1);
         }
-		
+
 		// Convert birth date format
 		if (isset($data['dob']) && $data['dob']) {
             $tmpDate = \DateTime::createFromFormat('d/m/Y', $data['dob']);
@@ -226,7 +226,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
 
         $form->bind($user);
         $form->setData($data);
-		
+
 		if (!$form->isValid()) {
         	if (isset($data['dob']) && $data['dob']) {
 	            $tmpDate = \DateTime::createFromFormat('Y-m-d', $data['dob']);
@@ -243,7 +243,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         } elseif (count($user->getRoles()) == 0) {
             $role = $roleMapper->findByRoleId($defaultRegisterRole);
         }
-		
+
 		if ($fileName) {
             $adapter = new \Zend\File\Transfer\Adapter\Http();
             $size = new Size(array('max'=>'500kb'));
@@ -299,13 +299,13 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $user  = new $class;
         $form  = $this->getRegisterForm();
         $form->get('dob')->setOptions(array('format' => 'Y-m-d'));
-		
+
 		// Convert birth date format
 		if (isset($data['dob']) && $data['dob']) {
             $tmpDate = \DateTime::createFromFormat('d/m/Y', $data['dob']);
             $data['dob'] = $tmpDate->format('Y-m-d');
         }
-        
+
         $form->bind($user);
         $form->setData($data);
         // Fetch any valid object manager from the Service manager (here, an entity manager)
@@ -364,14 +364,14 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         }
 
         // If user state is enabled, set the default state value
-        
+
         //set default state value for socialNetwork and others
         if ($zfcUserOptions->getEnableUserState()) {
             if ($zfcUserOptions->getDefaultUserState()) {
                 $user->setState($zfcUserOptions->getDefaultUserState());
             }
         }
-		
+
         /*
         if ($zfcUserOptions->getEnableUserState()) {
             if (!isset($data['socialNetwork'])) {
@@ -400,11 +400,11 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
             $userProvider = new \AdfabUser\Entity\UserProvider();
             $userProvider->setProvider($data['socialNetwork']);
             $userProvider->setProviderId($data['socialId']);
-            $userProvider->setUserId($user->getId());
+            $userProvider->setUser($user);
 
             $this->getProviderService()->getUserProviderMapper()->insert($userProvider);
 
-        } 
+        }
         //elseif ($this->getOptions()->getEmailVerification()) {
         if ($this->getOptions()->getEmailVerification()) {
             // If user verification by mail is enabled
@@ -506,7 +506,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         if (!isset($data['username']) || $data['username'] == '' ) {
             $data['username'] = ucfirst($data['firstname']) . " " . substr(ucfirst($data['lastname']),0,1);
         }
-		
+
 		// Convert birth date format
 		if (isset($data['dob']) && $data['dob']) {
             $tmpDate = \DateTime::createFromFormat('d/m/Y', $data['dob']);
@@ -633,20 +633,20 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
 
         return $user;
     }
-    
+
     public function getQueryUsersByRole($role=1, $order=null, $search='')
     {
         $em = $this->getServiceManager()->get('zfcuser_doctrine_em');
         $filterSearch = '';
-    
+
         if ($search != '') {
             $filterSearch = " AND (u.username like '%" . $search . "%' OR u.lastname like '%" . $search . "%' OR u.firstname like '%" . $search . "%' OR u.email like '%" . $search . "%')";
         }
-    
+
         // I Have to know what is the User Class used
         $zfcUserOptions = $this->getServiceManager()->get('zfcuser_module_options');
         $userClass = $zfcUserOptions->getUserEntityClass();
-    
+
         $query = $em->createQuery('
             SELECT u FROM ' . $userClass . ' u
             JOIN u.roles r
