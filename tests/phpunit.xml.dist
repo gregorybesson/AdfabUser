@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="Bootstrap.php">
+<phpunit bootstrap="./Bootstrap.php">
     <testsuites>
         <testsuite name="adfabuser">
             <directory>./AdfabUserTest</directory>
         </testsuite>
     </testsuites>
     
-    <!--filter>
+    <filter>
         <whitelist>
             <directory suffix=".php">../src</directory>
             <directory suffix=".phtml">../view</directory>
@@ -15,7 +15,7 @@
                 <directory suffix=".php">../test/</directory>
             </exclude>
         </whitelist>
-    </filter-->
+    </filter>
 
     <!--logging>
         <log type="coverage-html" target="../data/log/codeCoverage" charset="UTF-8"
