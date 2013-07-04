@@ -3,13 +3,13 @@
 <div id="new-user" class="row-fluid">
 	<div class="span8 center">
 		<div class="row-fluid">
-			<p class="h2"><?php echo $this->translate('Connectez-vous à votre compte ou inscrivez-vous sur Playground pour participer aux jeux concours et gagnez des tonnes de cadeaux !'); ?></p>
-			
+			<p class="h2"><?php echo $this->translate('login or register'); ?></p>
+
 			<!-- login -->
 			<div id="login-part" class="backgrey row-fluid" data-redirect="<?php  if($this->redirect) : echo $this->redirect; else : $this->url('home'); endif; ?>">
 				<div class="row-fluid hand-arrow-double">
 					<div class="block-left span7">
-						<p class="green"><?php echo $this->translate('Déjà un compte ?')?></p>
+						<p class="green"><?php echo $this->translate('Already an account ?')?></p>
 					</div>
 					<div class="block-right span5">
 					<?php if(!$this->zfcUserIdentity()): ?>
@@ -23,7 +23,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<?php
 		    if (!$this->enableRegistration) {
 		        print "Registration is disabled";
@@ -34,7 +34,7 @@
 		    $form->setAttribute('method', 'post');
 			$form->setAttribute('class', 'validate');
 		    ?>
-	        
+
 			<!-- create account -->
 			<div id="register-form" class="backgrey row-fluid">
 				<div class="row-fluid hand-arrow-simple">
@@ -42,15 +42,13 @@
 						<p class="green"><?php echo $this->translate('Create an account')?></p>
 					</div>
 					<div id="fb-connect" class="span7">
-						<p class="fb-connect-label"><?php echo $this->translate('Gagnez du temps avec facebook connect')?></p>
+						<p class="fb-connect-label"><?php echo $this->translate('Use Facebook connect')?></p>
 						<p><a href="<?php echo $this->url('zfcuser/register',array('socialnetwork' => 'facebook')) . ($this->redirect ? '?redirect='.$this->redirect : '');?>"><img src="<?php echo $this->basePath('images/common/fb-connect.png') ?>" alt="Facebook Connect" /></a></p>
 					</div>
 				</div>
-				
+
 				<!-- start form -->
 		        <?php echo $this->form()->openTag($form) ?>
-		        
-		            
 					<div class="row-fluid">
 						<div class="block-left yourtitle span4"><?php echo $form->get('title')->getLabel(); ?> <span>*</span> :</div>
 						<div class="block-right civility span7">
@@ -90,7 +88,7 @@
 						</div>
 					</div>
 					<?php //I do hide these fields on Facebook registration ?>
-					<?php if($form->get('password')):?>
+					<?php if($form->has('password')):?>
 					<div class="row-fluid">
 						<div class="block-left span4"><?php echo $form->get('password')->getLabel(); ?> <span>*</span> :<br/>
 							<span class="annotation">6 caractères minimum</span>
@@ -126,7 +124,7 @@
                             <img src="<?php echo $this->basePath('images/common/form-no.png') ?>" class="form-no form-no-cp">
 						</div>
 					</div>
-					
+
 					<!-- opt-in -->
 					<div class="row-fluid opt-in">
 						<b><?php echo $this->translate('Inscrivez-vous aux newsletters :')?></b>
@@ -139,7 +137,7 @@
 							<?php echo $this->formElementErrors($form->get('optin')) ?>
 						</div>
 					</div>
-					
+
 					<div class="row-fluid opt-in">
 						<div class="span9">
 							<p><?php echo $this->translate('Je souhaite recevoir les offres des partenaires de Playground')?> <span>*</span><br/>
@@ -160,10 +158,10 @@
 		            <?php endif ?>
 		        <?php echo $this->form()->closeTag() ?>
 				<!-- end form -->
-				
+
 			</div>
 			<p id="annotation"><?php echo $this->translate('* champs obligatoires')?></p>
-	
+
 		</div>
 	</div>
 </div>

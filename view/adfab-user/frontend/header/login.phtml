@@ -9,9 +9,7 @@ $form->setAttribute('id', 'header-login');
 <div class="barnav row-fluid">
 	<div id="menu"></div>
 	<ul class="mainnav span7">
-		<li class="nav-item games"><a href="<?php echo $this->url('jeuxconcours') ?>"<?php if($this->pageGames != ''): echo ' class="'.$this->pageGames.'"'; endif; ?>>Jeux concours</a></li>
-		<li class="nav-item winners"><a href="<?php echo $this->url('winner') ?>"<?php if($this->pageWinners != ''): echo ' class="'.$this->pageWinners.'"'; endif; ?>>Les gagnants</a></li>
-		<!-- <li class="nav-item shop"><a href="#">Boutique</a></li> -->
+		<li class="nav-item games"><a href="<?php echo $this->url('home') ?>"<?php if($this->pageGames != ''): echo ' class="'.$this->pageGames.'"'; endif; ?>>Home</a></li>
 	</ul>
     <div id="not-logged">
         <div class="connexion span5">
