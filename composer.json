@@ -26,6 +26,7 @@
 		"zendframework/zend-servicemanager" : "~2.1",
 		"zendframework/zend-modulemanager" : "~2.1",
 		"zendframework/zend-stdlib" : "~2.1",
+		"adfab/core" : "0.*",
 		"zf-commons/zfc-base" : "0.*",
 		"zf-commons/zfc-user" : "0.*",
 		"doctrine/data-fixtures" : "dev-master",
