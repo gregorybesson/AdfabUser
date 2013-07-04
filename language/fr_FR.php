@@ -42,11 +42,10 @@ return array(
     // Mot de passe oublié
     'Your email adress' 	=> 'Votre adresse email',
     'Request new password' 	=> 'Valider',
-    '<ul><li>Enter your new password</li></ul>' => '<ul><li>Saisissez votre nouveau mot de passe</li></ul>',
-    '<ul><li>Your password contains less than 6 characters</li></ul>' => '<ul><li>Votre mot de passe contient moins de 6 caractères</li></ul>',
-    '<ul><li>Confirm your password</li></ul>' => '<ul><li>Confirmer votre mot de passe</li></ul>',
-    '<ul><li>Your passwords are different</li></ul>' => '<ul><li>Vos mots de passe sont différents</li></ul>',
-    '<ul><li>Your password contains less than 6 characters</li><li>Your passwords are different</li></ul>' => '<ul><li>Votre mot de passe contient moins de 6 caractères</li><li>Vos mots de passe sont différents</li></ul>',
+    'Enter your new password' => 'Saisissez votre nouveau mot de passe',
+    'Your password contains less than 6 characters' => 'Votre mot de passe contient moins de 6 caractères',
+    'Confirm your password' => 'Confirmer votre mot de passe',
+    'Your passwords are different' => 'Vos mots de passe sont différents',
 
     // Reset account
     'New Email' => 'Nouvelle adresse email',
