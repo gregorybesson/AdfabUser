@@ -18,7 +18,7 @@ class userTest extends \PHPUnit_Framework_TestCase
      * @var Doctrine\ORM\EntityManager
      */
     protected $em;
-    
+
     /**
      * User sample
      * @var Array
@@ -29,6 +29,13 @@ class userTest extends \PHPUnit_Framework_TestCase
     {
         $this->sm = Bootstrap::getServiceManager();
         $this->em = $this->sm->get('doctrine.entitymanager.orm_default');
+
+        $tool = new \Doctrine\ORM\Tools\SchemaTool($this->em);
+        $classes = $this->em->getMetadataFactory()->getAllMetadata();
+
+        $tool->dropSchema($classes);
+
+        $tool->createSchema($classes);
 
         $this->userData = array(
         	'email' => 'correct@test.com',
