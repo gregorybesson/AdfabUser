@@ -63,7 +63,7 @@ class ResetFilter extends InputFilter
                     'options' => array(
                         'token' => 'newCredential',
                         'messages' => array(
-                            \Zend\Validator\identical::NOT_SAME => $translator->translate('Your passwords are different', 'adfabuser'),
+                            \Zend\Validator\Identical::NOT_SAME => $translator->translate('Your passwords are different', 'adfabuser'),
                         ),
                     )
                 ),
