@@ -39,7 +39,64 @@ class UserControllerTest extends AbstractHttpControllerTestCase
     	$this->assertControllerClass('UserController');
     	$this->assertActionName('login');
     	$this->assertMatchedRouteName('zfcuser/login');
+
+    	$this->assertRedirectTo('/mon-compte/inscription');
+    	//$postData = array('title' => 'Led Zeppelin III', 'artist' => 'Led Zeppelin');
+    	//$this->dispatch('/album/add', 'POST', $postData);
+    	//$this->assertResponseStatusCode(302);
     }
+
+    public function testAjaxloginActionCanBeAccessed()
+    {
+    	$this->dispatch('/mon-compte/ajaxlogin');
+    	$this->assertResponseStatusCode(200);
+
+    	$this->assertModuleName('adfabuser');
+    	$this->assertControllerName('adfabuser_user');
+    	$this->assertControllerClass('UserController');
+    	$this->assertActionName('ajaxlogin');
+    	$this->assertMatchedRouteName('zfcuser/ajaxlogin');
+    }
+
+    public function testAjaxauthenticateActionCanBeAccessed()
+    {
+    	$this->dispatch('/mon-compte/ajaxauthenticate');
+    	$this->assertResponseStatusCode(200);
+
+    	$this->assertModuleName('adfabuser');
+    	$this->assertControllerName('adfabuser_user');
+    	$this->assertControllerClass('UserController');
+    	$this->assertActionName('ajaxauthenticate');
+    	$this->assertMatchedRouteName('zfcuser/ajaxauthenticate');
+    }
+
+    public function testLogoutActionCanBeAccessed()
+    {
+    	$this->dispatch('/mon-compte/logout');
+    	$this->assertResponseStatusCode(302);
+
+    	$this->assertModuleName('adfabuser');
+    	$this->assertControllerName('adfabuser_user');
+    	$this->assertControllerClass('UserController');
+    	$this->assertActionName('logout');
+    	$this->assertMatchedRouteName('zfcuser/logout');
+
+    	$this->assertRedirectTo('/');
+    }
+
+    /*public function testProviderLoginActionCanBeAccessed()
+    {
+    	$this->dispatch('/mon-compte/login/facebook');
+    	$this->assertResponseStatusCode(302);
+
+    	$this->assertModuleName('adfabuser');
+    	$this->assertControllerName('adfabuser_user');
+    	$this->assertControllerClass('UserController');
+    	$this->assertActionName('providerLogin');
+    	$this->assertMatchedRouteName('zfcuser/login/provider');
+
+    	$this->assertRedirectTo('/mon-compte/inscription');
+    }*/
 
     public function testRegisterActionCanBeAccessed()
     {
@@ -53,7 +110,7 @@ class UserControllerTest extends AbstractHttpControllerTestCase
     	$this->assertMatchedRouteName('zfcuser/register');
     }
 
-    public function testProfileNotLoggedIn()
+    public function testProfileActionCanBeAccessed()
     {
     	$this->dispatch('/mon-compte/mes-coordonnees');
     	$this->assertResponseStatusCode(302);
@@ -63,5 +120,83 @@ class UserControllerTest extends AbstractHttpControllerTestCase
     	$this->assertControllerClass('UserController');
     	$this->assertActionName('profile');
     	$this->assertMatchedRouteName('zfcuser/profile');
+
+    	$this->assertRedirectTo('/');
+    }
+
+    public function testBlockAccountActionCanBeAccessed()
+    {
+    	$this->dispatch('/mon-compte/block-account');
+    	$this->assertResponseStatusCode(302);
+
+    	$this->assertModuleName('adfabuser');
+    	$this->assertControllerName('adfabuser_user');
+    	$this->assertControllerClass('UserController');
+    	$this->assertActionName('blockAccount');
+    	$this->assertMatchedRouteName('zfcuser/blockaccount');
+
+    	$this->assertRedirectTo('/mon-compte/mes-coordonnees');
+    }
+
+    public function testNewsletterActionCanBeAccessed()
+    {
+    	$this->dispatch('/mon-compte/newsletter');
+    	$this->assertResponseStatusCode(302);
+
+    	$this->assertModuleName('adfabuser');
+    	$this->assertControllerName('adfabuser_user');
+    	$this->assertControllerClass('UserController');
+    	$this->assertActionName('newsletter');
+    	$this->assertMatchedRouteName('zfcuser/newsletter');
+    }
+
+    public function testAjaxNewsletterActionCanBeAccessed()
+    {
+    	$this->dispatch('/mon-compte/ajax-newsletter');
+    	$this->assertResponseStatusCode(200);
+
+    	$this->assertModuleName('adfabuser');
+    	$this->assertControllerName('adfabuser_user');
+    	$this->assertControllerClass('UserController');
+    	$this->assertActionName('ajaxNewsletter');
+    	$this->assertMatchedRouteName('zfcuser/ajax_newsletter');
+    }
+
+    public function testPrizeCategoryUserActionCanBeAccessed()
+    {
+    	$this->dispatch('/mon-compte/prizes');
+    	$this->assertResponseStatusCode(302);
+
+    	$this->assertModuleName('adfabuser');
+    	$this->assertControllerName('adfabuser_user');
+    	$this->assertControllerClass('UserController');
+    	$this->assertActionName('prizeCategoryUser');
+    	$this->assertMatchedRouteName('zfcuser/profile_prizes');
+    }
+
+    public function testRegistermailActionCanBeAccessed()
+    {
+    	$this->dispatch('/mon-compte/registermail');
+    	$this->assertResponseStatusCode(200);
+
+    	$this->assertModuleName('adfabuser');
+    	$this->assertControllerName('adfabuser_user');
+    	$this->assertControllerClass('UserController');
+    	$this->assertActionName('registermail');
+    	$this->assertMatchedRouteName('zfcuser/registermail');
+    }
+
+    public function testChangeemailActionCanBeAccessed()
+    {
+    	$this->dispatch('/mon-compte/change-email');
+    	$this->assertResponseStatusCode(302);
+
+    	$this->assertModuleName('adfabuser');
+    	$this->assertControllerName('adfabuser_user');
+    	$this->assertControllerClass('UserController');
+    	$this->assertActionName('changeemail');
+    	$this->assertMatchedRouteName('zfcuser/changeemail');
+
+    	$this->assertRedirectTo('/');
     }
 }
