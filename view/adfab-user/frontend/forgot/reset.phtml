@@ -21,12 +21,12 @@
 				<ul class="zend_form">
 					<li class="row-fluid">
 						<div class="span5"><?php echo $this->formLabel($form->get('newCredential')); ?></div>
-						<div class="span7"><?php echo $this->formInput($form->get('newCredential')) . $this->formElementErrors($form->get('newCredential'));
+						<div class="span7"><?php echo $this->formInput($form->get('newCredential')) . $this->translate($this->formElementErrors($form->get('newCredential')));
 					?></div>
 					</li>
 					<li class="row-fluid">
 						<div class="span5"><?php echo $this->formLabel($form->get('newCredentialVerify')); ?></div>
-						<div class="span7"><?php echo $this->formInput($form->get('newCredentialVerify')) . $this->formElementErrors($form->get('newCredentialVerify')); ?></div>
+						<div class="span7"><?php echo $this->formInput($form->get('newCredentialVerify')) . $this->translate($this->formElementErrors($form->get('newCredentialVerify'))); ?></div>
 					</li class="row-fluid">
 					<li>
 						<div class="span7 offset5"><?php echo $this->formButton($form->get('submit')); ?></div></li>

@@ -26,10 +26,9 @@
 		"zendframework/zend-servicemanager" : "~2.1",
 		"zendframework/zend-modulemanager" : "~2.1",
 		"zendframework/zend-stdlib" : "~2.1",
-		"zf-commons/zfc-base" : "0.*",
-		"zf-commons/zfc-user" : "0.*",
-		"doctrine/data-fixtures" : "dev-master",
-		"hounddog/doctrine-data-fixture-module" : "dev-master"
+		"adfab/core" : "0.*",
+		"hybridauth/hybridauth" : "dev-master",
+		"zf-commons/zfc-user" : "0.*"
     },
     "require-dev": {
         "doctrine/doctrine-orm-module": "0.*"

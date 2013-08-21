@@ -140,7 +140,7 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
             }
 
             $localUserProvider = new \AdfabUser\Entity\UserProvider();
-            $localUserProvider->setUserId($localUser->getId())
+            $localUserProvider->setUser($localUser)
                 ->setProviderId($userProfile->identifier)
                 ->setProvider($provider);
             $this->getMapper()->insert($localUserProvider);
@@ -151,7 +151,7 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
         if ($zfcUserOptions->getEnableUserState()) {
             // Don't allow user to login if state is not in allowed list
             $mapper = $this->getZfcUserMapper();
-            $user = $mapper->findById($localUserProvider->getUserId());
+            $user = $mapper->findById($localUserProvider->getUser()->getId());
             if (!in_array($user->getState(), $zfcUserOptions->getAllowedLoginStates())) {
                 $authEvent->setCode(Result::FAILURE_UNCATEGORIZED)
                   ->setMessages(array('A record with the supplied identity is not active.'));
@@ -161,7 +161,7 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
             }
         }
 
-        $authEvent->setIdentity($localUserProvider->getUserId());
+        $authEvent->setIdentity($localUserProvider->getUser()->getId());
 
         $this->setSatisfied(true);
         $storage = $this->getStorage()->read();
@@ -191,7 +191,7 @@ class HybridAuth extends AbstractAdapter implements ServiceManagerAwareInterface
      *
      * @param  Hybrid_Auth    $hybridAuth
      * @return UserController
-     * 
+     *
      * CAUTION : the type of the parameter is Hybrid_Auth but can be NULL if an error is catched during
      * the creation of the object in the factory (ie. FB : I refuse the options given on registration => error)
      * In this type of case, getHybridAuth use the serviceManager to grab a new HybridAuth instance

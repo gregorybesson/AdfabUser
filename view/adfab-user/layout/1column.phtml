@@ -1,0 +1,47 @@
+<?php echo $this->doctype(); ?>
+<?php $this->plugin('translate')->setTranslatorTextDomain('default');// Pour le texte ?>
+<?php
+$children = $this->viewModel()
+    ->getCurrent()
+    ->getChildren();
+$ourView  = $children[0];
+?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+    <head>
+    <?php
+    	// Assetic !! Uncomment to use
+		echo $this->plugin('HeadLink');
+    	echo $this->plugin('HeadStyle');
+    	echo $this->plugin('HeadScript');
+	?>
+    </head>
+    <body>
+        <div id="container">
+            <div id="fb-root"></div>
+    		<div id="content" class="row-fluid">
+    			<!-- HEADER -->
+				<div id="header" class="row-fluid">
+					<div id="wrap-logo">
+						<div id="logo">
+							<img src="<?php echo $this->basePath('images/logo.png');?>" alt="" />
+						</div>
+						<p>Playground</p>
+					</div>
+				</div>
+				<!-- END HEADER -->
+                <!-- CONTENT PAGE -->
+                <div id="containerpage">
+	                <?php if (isset($ourView->flashMessages) && count($ourView->flashMessages)) : ?>
+	                <ul class="flashMessages">
+	                    <?php foreach ($ourView->flashMessages as $fMessage) : ?>
+	                    <li><?php echo $this->translate($fMessage); ?></li>
+	                    <?php endforeach; ?>
+	                </ul>
+	                <?php endif; ?>
+                	<?php echo $this->content; ?>
+                </div><!-- END CONTENT PAGE -->
+            </div><!-- END CONTENT -->
+        </div>
+        <?php echo $this->inlineScript() ?>
+    </body>
+</html>

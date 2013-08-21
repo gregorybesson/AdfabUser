@@ -85,7 +85,7 @@ class UserController extends ZfcUserController
         $form->setAttribute('action', $this->url()->fromRoute('zfcuser/register'));
         $params = array();
         $socialCredentials = array();
-        
+
         if ($this->getOptions()->getUseRedirectParameterIfPresent() && $request->getQuery()->get('redirect')) {
         	$redirect = $request->getQuery()->get('redirect');
         } else {
@@ -98,7 +98,7 @@ class UserController extends ZfcUserController
 
             if (!empty($infoMe)) {
                 $user = $this->getProviderService()->getUserProviderMapper()->findUserByProviderId($infoMe->identifier, $socialnetwork);
-                
+
                 if ($user || $service->getOptions()->getCreateUserAutoSocial() == true) {
                     //on le dirige vers l'action d'authentification
                     if(! $redirect && $this->getOptions()->getLoginRedirectRoute() != ''){
@@ -113,7 +113,7 @@ class UserController extends ZfcUserController
                 $form->setAttribute('action', $this->url()->fromRoute('zfcuser/register', array('socialnetwork' => $socialnetwork)));
                 $form->remove('password');
                 $form->remove('passwordVerify');
-				
+
 				$birthMonth = $infoMe->birthMonth;
 				if (strlen($birthMonth) <= 1){
 					$birthMonth = '0'.$birthMonth;
@@ -578,7 +578,7 @@ class UserController extends ZfcUserController
             $formEmail->setData($prg);
 
             if (! $formEmail->isValid()) {
-            	
+
             	$messages = $formEmail->getMessages();
                 if (isset($messages['newIdentity']) && isset($messages['newIdentity']['isEmpty'])) {
                     $messages['newIdentity']['isEmpty'] = 'Saisissez votre nouvel email';
@@ -593,7 +593,7 @@ class UserController extends ZfcUserController
                     $messages['newIdentityVerify']['notSame'] = 'Les deux emails ne correspondent pas';
                 }
                 $formEmail->setMessages($messages);
-				
+
                 return array(
                     'statusPassword' => null,
                     'changePasswordForm' => $formPassword,
@@ -817,29 +817,9 @@ class UserController extends ZfcUserController
     }
 
     /**
-     * user activity
-     */
-    public function activityAction ()
-    {
-        $viewModel = new ViewModel();
-
-        return $viewModel;
-    }
-
-    /**
      * user registermail
      */
     public function registermailAction ()
-    {
-        $viewModel = new ViewModel();
-
-        return $viewModel;
-    }
-
-    /**
-     * user game account
-     */
-    public function accountAction ()
     {
         $viewModel = new ViewModel();
 

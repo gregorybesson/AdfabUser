@@ -6,8 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 /** @ORM\Entity @ORM\Table(name="user_provider") */
 class UserProvider
 {
-    /** @ORM\Id @ORM\Column(type="integer",name="user_id") */
-    protected $userId;
+    /** ORM\Id ORM\Column(type="integer",name="user_id") */
+	/**
+	 * @ORM\OneToOne(targetEntity="User")
+	 * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id", onDelete="CASCADE")
+	 **/
+    protected $user;
 
     /** @ORM\Id @ORM\Column(type="string",length=50,name="provider_id") */
     protected $providerId;
@@ -18,18 +22,18 @@ class UserProvider
     /**
      * @return the $userId
      */
-    public function getUserId()
+    public function getUser()
     {
-        return $this->userId;
+        return $this->user;
     }
 
     /**
      * @param  integer      $userId
      * @return UserProvider
      */
-    public function setUserId($userId)
+    public function setUser($user)
     {
-        $this->userId = $userId;
+        $this->user = $user;
 
         return $this;
     }

@@ -31,42 +31,42 @@ return array(
 
     'core_layout' => array(
         'AdfabUser' => array(
-            'default_layout' => 'layout/2columns-left',
+            'default_layout' => 'adfab-user/layout/2columns-left',
             'controllers' => array(
                 'adfabuser_user'   => array(
-                    'default_layout' => 'layout/2columns-left',
+                    'default_layout' => 'adfab-user/layout/2columns-left',
                     'children_views' => array(
                         'col_left'  => 'adfab-user/layout/col-user.phtml',
                     ),
                     'actions' => array(
                         'index' => array(
-                            'default_layout' => 'layout/1column',
+                            'default_layout' => 'adfab-user/layout/1column',
                         ),
                         'register' => array(
-                            'default_layout' => 'layout/1column',
+                            'default_layout' => 'adfab-user/layout/1column',
                         ),
                         'profile' => array(
-                            'default_layout' => 'layout/2columns-left',
+                            'default_layout' => 'adfab-user/layout/2columns-left',
                             'children_views' => array(
                                 'col_left'  => 'adfab-user/layout/col-user.phtml',
                             ),
                         ),
                         'registermail' => array(
-                            'default_layout' => 'layout/1column',
+                            'default_layout' => 'adfab-user/layout/1column',
                         ),
                     ),
                 ),
                 'adfabuser_forgot' => array(
-                    'default_layout' => 'layout/1column',
+                    'default_layout' => 'adfab-user/layout/1column',
                     'actions' => array(
                         'forgot' => array(
-                            'default_layout' => 'layout/1column',
+                            'default_layout' => 'adfab-user/layout/1column',
                         ),
                         'resetpassword' => array(
-                            'default_layout' => 'layout/1column',
+                            'default_layout' => 'adfab-user/layout/1column',
                         ),
                         'forgotpassword' => array(
-                            'default_layout' => 'layout/1column',
+                            'default_layout' => 'adfab-user/layout/1column',
                         ),
                     ),
                 ),

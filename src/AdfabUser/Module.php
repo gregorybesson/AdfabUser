@@ -28,7 +28,7 @@ class Module
         $translator = $sm->get('translator');
         AbstractValidator::setDefaultTranslator($translator,'adfabcore');
 
-        $doctrine = $sm->get('zfcuser_doctrine_em');
+        $doctrine = $sm->get('doctrine.entitymanager.orm_default');
         $evm = $doctrine->getEventManager();
 
 
@@ -323,7 +323,7 @@ class Module
                     $options = $sm->get('adfabuser_module_options');
                     $translator = $sm->get('translator');
                     $form = new Form\Reset(null, $options, $translator);
-                    $form->setInputFilter(new Form\ResetFilter($options));
+                    $form->setInputFilter(new Form\ResetFilter($options, $translator));
 
                     return $form;
                 },
