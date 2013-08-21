@@ -76,18 +76,11 @@ return array(
 
     'view_manager' => array(
         'template_path_stack' => array(
-            'adfabuser' => __DIR__ . '/../view',
+            __DIR__ . '/../view/admin',
+        	__DIR__ . '/../view/frontend',
+        		
         ),
         'template_map' => array(
-            'zfc-user/user/login'           => __DIR__ . '/../view/adfab-user/frontend/user/login.phtml',
-            'adfab-user/header/login.phtml' => __DIR__ . '/../view/adfab-user/frontend/header/login.phtml',
-            'adfab-user/user/profile'       => __DIR__ . '/../view/adfab-user/frontend/account/profile.phtml',
-            'adfab-user/user/newsletter'    => __DIR__ . '/../view/adfab-user/frontend/account/newsletter.phtml',
-            'adfab-user/user/register'      => __DIR__ . '/../view/adfab-user/frontend/register/register.phtml',
-            'adfab-user/user/registermail'  => __DIR__ . '/../view/adfab-user/frontend/register/registermail.phtml',
-            'adfab-user/user/address'       => __DIR__ . '/../view/adfab-user/frontend/partial/address.phtml',
-            'adfab-user/forgot/forgot'      => __DIR__ . '/../view/adfab-user/frontend/forgot/forgot.phtml',
-            'adfab-user/forgot/reset'       => __DIR__ . '/../view/adfab-user/frontend/forgot/reset.phtml',
         ),
     ),
 
