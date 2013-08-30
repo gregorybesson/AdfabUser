@@ -76,9 +76,7 @@ return array(
 
     'view_manager' => array(
         'template_path_stack' => array(
-            __DIR__ . '/../view/admin',
-        	__DIR__ . '/../view/frontend',
-        		
+            'adfabuser' => __DIR__ . '/../view',
         ),
         'template_map' => array(
         ),
@@ -106,221 +104,225 @@ return array(
 
     'router' => array(
         'routes' => array(
-            'zfcuser' => array(
-                'type' => 'Literal',
-                'priority' => 1000,
-                'options' => array(
-                    'route' => '/mon-compte',
-                    'defaults' => array(
-                        'controller' => 'zfcuser',
-                        'action'     => 'index',
-                    ),
-                ),
-                'may_terminate' => true,
-                'child_routes' => array(
-                    'forgotpassword' => array(
-                        'type' => 'Literal',
-                        'options' => array(
-                            'route' => '/mot-passe-oublie',
-                            'defaults' => array(
-                                'controller' => 'adfabuser_forgot',
-                                'action'     => 'forgot',
-                            ),
-                        ),
-                    ),
-                    'ajaxlogin' => array(
-                        'type' => 'Literal',
-                        'options' => array(
-                            'route' => '/ajaxlogin',
-                            'defaults' => array(
-                                    'controller' => 'adfabuser_user',
-                                    'action'     => 'ajaxlogin',
-                            ),
-                        ),
-                    ),
-                    'login' => array(
-                        'type' => 'Literal',
-                        'options' => array(
-                            'route' => '/login',
-                            'defaults' => array(
-                                'controller' => 'adfabuser_user',
-                                'action'     => 'login',
-                            ),
-                        ),
-                        'may_terminate' => true,
-                        'child_routes' => array(
-                            'provider' => array(
-                                'type' => 'Segment',
-                                'options' => array(
-                                    'route' => '/:provider',
-                                    'constraints' => array(
-                                        'provider' => '[a-zA-Z][a-zA-Z0-9_-]+',
-                                    ),
-                                    'defaults' => array(
-                                        'controller' => 'adfabuser_user',
-                                        'action' => 'providerLogin',
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                    'logout' => array(
-                        'type' => 'Literal',
-                        'options' => array(
-                            'route' => '/logout',
-                            'defaults' => array(
-                                'controller' => 'adfabuser_user',
-                                'action'     => 'logout',
-                            ),
-                        ),
-                    ),
-                    'ajaxauthenticate' => array(
-                        'type' => 'Literal',
-                        'options' => array(
-                            'route' => '/ajaxauthenticate',
-                            'defaults' => array(
-                                'controller' => 'adfabuser_user',
-                                'action'     => 'ajaxauthenticate',
-                            ),
-                        ),
-                    ),
-                    'authenticate' => array(
-                        'type' => 'Literal',
-                        'options' => array(
-                                'route' => '/authenticate',
-                                'defaults' => array(
-                                        'controller' => 'zfcuser',
-                                        'action'     => 'authenticate',
-                                ),
-                        ),
-                    ),
-                    'resetpassword' => array(
-                        'type' => 'Segment',
-                        'options' => array(
-                            'route' => '/reset-password/:userId/:token',
-                            'defaults' => array(
-                                'controller' => 'adfabuser_forgot',
-                                'action'     => 'reset',
-                            ),
-                            'constraints' => array(
-                                'userId'  => '[0-9]+',
-                                'token' => '[A-F0-9]+',
-                            ),
-                        ),
-                    ),
-                    'register' => array(
-                        'type' => 'Segment',
-                        'options' => array(
-                            'route' => '/inscription[/:socialnetwork]',
-                            'defaults' => array(
-                                'controller' => 'adfabuser_user',
-                                'action'     => 'register',
-                            ),
-                        ),
-                    ),
-                    'registermail' => array(
-                        'type' => 'Literal',
-                        'options' => array(
-                            'route' => '/registermail',
-                            'defaults' => array(
-                                'controller' => 'adfabuser_user',
-                                'action'     => 'registermail',
-                            ),
-                        ),
-                    ),
-                    'verification' => array(
-                        'type' => 'Literal',
-                        'options' => array(
-                            'route' => '/verification',
-                            'defaults' => array(
-                                'controller' => 'adfabuser_user',
-                                'action'     => 'check-token',
-                            ),
-                        ),
-                    ),
-                    'backend' => array(
-                        'type' => 'Segment',
-                        'options' => array(
-                            'route' => '/backend',
-                            'defaults' => array(
-                                'controller' => 'adfabuser_user',
-                                'action' => 'HybridAuthBackend'
-                            )
-                        ),
-                    ),
-
-                    'profile' => array(
-                        'type' => 'Literal',
-                        'options' => array(
-                            'route' => '/mes-coordonnees',
-                            'defaults' => array(
-                                'controller' => 'adfabuser_user',
-                                'action'     => 'profile',
-                            ),
-                        ),
-                    ),
-                    'profile_prizes' => array(
-                        'type' => 'Literal',
-                        'options' => array(
-                            'route' => '/prizes',
-                            'defaults' => array(
-                                'controller' => 'adfabuser_user',
-                                'action'     => 'prizeCategoryUser',
-                            ),
-                        ),
-                    ),
-                    'newsletter' => array(
-                        'type' => 'Literal',
-                        'options' => array(
-                            'route' => '/newsletter',
-                            'defaults' => array(
-                                'controller' => 'adfabuser_user',
-                                'action'     => 'newsletter',
-                            ),
-                        ),
-                    ),
-                    'ajax_newsletter' => array(
-                        'type' => 'Literal',
-                        'options' => array(
-                            'route' => '/ajax-newsletter',
-                            'defaults' => array(
-                                'controller' => 'adfabuser_user',
-                                'action'     => 'ajaxNewsletter',
-                            ),
-                        ),
-                    ),
-                    'changepassword' => array(
-                        'type' => 'Literal',
-                        'options' => array(
-                            'route' => '/change-password',
-                            'defaults' => array(
-                                'controller' => 'adfabuser_user',
-                                'action'     => 'changepassword',
-                            ),
-                        ),
-                    ),
-                    'blockaccount' => array(
-                        'type' => 'Literal',
-                        'options' => array(
-                            'route' => '/block-account',
-                            'defaults' => array(
-                                'controller' => 'adfabuser_user',
-                                'action'     => 'blockAccount',
-                            ),
-                        ),
-                    ),
-                    'changeemail' => array(
-                        'type' => 'Literal',
-                        'options' => array(
-                            'route' => '/change-email',
-                            'defaults' => array(
-                                'controller' => 'adfabuser_user',
-                                'action' => 'changeemail',
-                            ),
-                        ),
-                    ),
-                ),
-            ),
+        	'frontend' => array(
+       			'child_routes' => array(
+		            'zfcuser' => array(
+		                'type' => 'Literal',
+		                'priority' => 1000,
+		                'options' => array(
+		                    'route' => 'mon-compte',
+		                    'defaults' => array(
+		                        'controller' => 'zfcuser',
+		                        'action'     => 'index',
+		                    ),
+		                ),
+		                'may_terminate' => true,
+		                'child_routes' => array(
+		                    'forgotpassword' => array(
+		                        'type' => 'Literal',
+		                        'options' => array(
+		                            'route' => '/mot-passe-oublie',
+		                            'defaults' => array(
+		                                'controller' => 'adfabuser_forgot',
+		                                'action'     => 'forgot',
+		                            ),
+		                        ),
+		                    ),
+		                    'ajaxlogin' => array(
+		                        'type' => 'Literal',
+		                        'options' => array(
+		                            'route' => '/ajaxlogin',
+		                            'defaults' => array(
+		                                    'controller' => 'adfabuser_user',
+		                                    'action'     => 'ajaxlogin',
+		                            ),
+		                        ),
+		                    ),
+		                    'login' => array(
+		                        'type' => 'Literal',
+		                        'options' => array(
+		                            'route' => '/login',
+		                            'defaults' => array(
+		                                'controller' => 'adfabuser_user',
+		                                'action'     => 'login',
+		                            ),
+		                        ),
+		                        'may_terminate' => true,
+		                        'child_routes' => array(
+		                            'provider' => array(
+		                                'type' => 'Segment',
+		                                'options' => array(
+		                                    'route' => '/:provider',
+		                                    'constraints' => array(
+		                                        'provider' => '[a-zA-Z][a-zA-Z0-9_-]+',
+		                                    ),
+		                                    'defaults' => array(
+		                                        'controller' => 'adfabuser_user',
+		                                        'action' => 'providerLogin',
+		                                    ),
+		                                ),
+		                            ),
+		                        ),
+		                    ),
+		                    'logout' => array(
+		                        'type' => 'Literal',
+		                        'options' => array(
+		                            'route' => '/logout',
+		                            'defaults' => array(
+		                                'controller' => 'adfabuser_user',
+		                                'action'     => 'logout',
+		                            ),
+		                        ),
+		                    ),
+		                    'ajaxauthenticate' => array(
+		                        'type' => 'Literal',
+		                        'options' => array(
+		                            'route' => '/ajaxauthenticate',
+		                            'defaults' => array(
+		                                'controller' => 'adfabuser_user',
+		                                'action'     => 'ajaxauthenticate',
+		                            ),
+		                        ),
+		                    ),
+		                    'authenticate' => array(
+		                        'type' => 'Literal',
+		                        'options' => array(
+		                                'route' => '/authenticate',
+		                                'defaults' => array(
+		                                        'controller' => 'zfcuser',
+		                                        'action'     => 'authenticate',
+		                                ),
+		                        ),
+		                    ),
+		                    'resetpassword' => array(
+		                        'type' => 'Segment',
+		                        'options' => array(
+		                            'route' => '/reset-password/:userId/:token',
+		                            'defaults' => array(
+		                                'controller' => 'adfabuser_forgot',
+		                                'action'     => 'reset',
+		                            ),
+		                            'constraints' => array(
+		                                'userId'  => '[0-9]+',
+		                                'token' => '[A-F0-9]+',
+		                            ),
+		                        ),
+		                    ),
+		                    'register' => array(
+		                        'type' => 'Segment',
+		                        'options' => array(
+		                            'route' => '/inscription[/:socialnetwork]',
+		                            'defaults' => array(
+		                                'controller' => 'adfabuser_user',
+		                                'action'     => 'register',
+		                            ),
+		                        ),
+		                    ),
+		                    'registermail' => array(
+		                        'type' => 'Literal',
+		                        'options' => array(
+		                            'route' => '/registermail',
+		                            'defaults' => array(
+		                                'controller' => 'adfabuser_user',
+		                                'action'     => 'registermail',
+		                            ),
+		                        ),
+		                    ),
+		                    'verification' => array(
+		                        'type' => 'Literal',
+		                        'options' => array(
+		                            'route' => '/verification',
+		                            'defaults' => array(
+		                                'controller' => 'adfabuser_user',
+		                                'action'     => 'check-token',
+		                            ),
+		                        ),
+		                    ),
+		                    'backend' => array(
+		                        'type' => 'Segment',
+		                        'options' => array(
+		                            'route' => '/backend',
+		                            'defaults' => array(
+		                                'controller' => 'adfabuser_user',
+		                                'action' => 'HybridAuthBackend'
+		                            )
+		                        ),
+		                    ),
+		
+		                    'profile' => array(
+		                        'type' => 'Literal',
+		                        'options' => array(
+		                            'route' => '/mes-coordonnees',
+		                            'defaults' => array(
+		                                'controller' => 'adfabuser_user',
+		                                'action'     => 'profile',
+		                            ),
+		                        ),
+		                    ),
+		                    'profile_prizes' => array(
+		                        'type' => 'Literal',
+		                        'options' => array(
+		                            'route' => '/prizes',
+		                            'defaults' => array(
+		                                'controller' => 'adfabuser_user',
+		                                'action'     => 'prizeCategoryUser',
+		                            ),
+		                        ),
+		                    ),
+		                    'newsletter' => array(
+		                        'type' => 'Literal',
+		                        'options' => array(
+		                            'route' => '/newsletter',
+		                            'defaults' => array(
+		                                'controller' => 'adfabuser_user',
+		                                'action'     => 'newsletter',
+		                            ),
+		                        ),
+		                    ),
+		                    'ajax_newsletter' => array(
+		                        'type' => 'Literal',
+		                        'options' => array(
+		                            'route' => '/ajax-newsletter',
+		                            'defaults' => array(
+		                                'controller' => 'adfabuser_user',
+		                                'action'     => 'ajaxNewsletter',
+		                            ),
+		                        ),
+		                    ),
+		                    'changepassword' => array(
+		                        'type' => 'Literal',
+		                        'options' => array(
+		                            'route' => '/change-password',
+		                            'defaults' => array(
+		                                'controller' => 'adfabuser_user',
+		                                'action'     => 'changepassword',
+		                            ),
+		                        ),
+		                    ),
+		                    'blockaccount' => array(
+		                        'type' => 'Literal',
+		                        'options' => array(
+		                            'route' => '/block-account',
+		                            'defaults' => array(
+		                                'controller' => 'adfabuser_user',
+		                                'action'     => 'blockAccount',
+		                            ),
+		                        ),
+		                    ),
+		                    'changeemail' => array(
+		                        'type' => 'Literal',
+		                        'options' => array(
+		                            'route' => '/change-email',
+		                            'defaults' => array(
+		                                'controller' => 'adfabuser_user',
+		                                'action' => 'changeemail',
+		                            ),
+		                        ),
+		                    ),
+		                ),
+		            ),
+       			),
+        	),
             'zfcadmin' => array(
                 'child_routes' => array(
                     'adfabuser' => array(
