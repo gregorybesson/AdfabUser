@@ -39,7 +39,7 @@ class User extends Register
         $this->setAttribute('enctype','multipart/form-data');
 
         $this->add(array(
-            'name' => 'userId',
+            'name' => 'id',
             'attributes' => array(
                 'type' => 'hidden',
                 'value' => 0

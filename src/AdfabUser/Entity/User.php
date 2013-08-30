@@ -816,7 +816,8 @@ class User implements \ZfcUser\Entity\UserInterface, ProviderInterface, InputFil
 			
 			$inputFilter->add($factory->createInput(array(
                 'name' => 'dob',
-                'required' => true,
+                'required' => false,
+				'allowEmpty' => true,
                 /*'validators' => array(
 					array(
 						'name' => 'Date',
@@ -827,7 +828,8 @@ class User implements \ZfcUser\Entity\UserInterface, ProviderInterface, InputFil
 
             $inputFilter->add($factory->createInput(array(
                 'name'     => 'postal_code',
-                'required' => true,
+                'required' => false,
+            	'allowEmpty' => true,
                 /*'validators' => array(
                     array(
                         'name'    => 'PostCode',
@@ -842,6 +844,7 @@ class User implements \ZfcUser\Entity\UserInterface, ProviderInterface, InputFil
             $inputFilter->add(array(
             	'name'       => 'country',
             	'required'   => false,
+            	'allowEmpty' => true,
            		'filters'    => array(array('name' => 'StringTrim')),
            		'validators' => array(
        				array(
@@ -857,8 +860,57 @@ class User implements \ZfcUser\Entity\UserInterface, ProviderInterface, InputFil
             $inputFilter->add($factory->createInput(array(
                 'name'     => 'title',
                 'required' => false,
+            	'allowEmpty' => true,
+            )));
+            
+            $inputFilter->add($factory->createInput(array(
+            		'name'     => 'displayName',
+            		'required' => false,
+            		'allowEmpty' => true,
             )));
 
+            $inputFilter->add($factory->createInput(array(
+            		'name'     => 'gender',
+            		'required' => false,
+            		'allowEmpty' => true,
+            )));
+            
+            $inputFilter->add($factory->createInput(array(
+            		'name'     => 'avatar',
+            		'required' => false,
+            		'allowEmpty' => true,
+            )));
+            
+            $inputFilter->add($factory->createInput(array(
+            		'name'     => 'telephone',
+            		'required' => false,
+            		'allowEmpty' => true,
+            )));
+            
+            $inputFilter->add($factory->createInput(array(
+            		'name'     => 'mobile',
+            		'required' => false,
+            		'allowEmpty' => true,
+            )));
+            
+            $inputFilter->add($factory->createInput(array(
+            		'name'     => 'address',
+            		'required' => false,
+            		'allowEmpty' => true,
+            )));
+            
+            $inputFilter->add($factory->createInput(array(
+            		'name'     => 'address2',
+            		'required' => false,
+            		'allowEmpty' => true,
+            )));
+            
+            $inputFilter->add($factory->createInput(array(
+            		'name'     => 'city',
+            		'required' => false,
+            		'allowEmpty' => true,
+            )));
+            
             $inputFilter->add($factory->createInput(array(
                 'name'       => 'email',
                 'required'   => true,

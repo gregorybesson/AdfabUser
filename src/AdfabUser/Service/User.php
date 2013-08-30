@@ -56,6 +56,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
      */
     public function create(array $data)
     {
+    	$entityManager = $this->getServiceManager()->get('zfcuser_doctrine_em');
         $zfcUserOptions = $this->getServiceManager()->get('zfcuser_module_options');
         $class = $zfcUserOptions->getUserEntityClass();
         $user  = new $class;
@@ -80,18 +81,26 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
                 array('password'=> $pass)
             );*/
             $user->setPassword($pass);
-
-            $filter = $user->getInputFilter();
-            $filter->remove('password');
-            $filter->remove('passwordVerify');
-            $filter->get('title')->setRequired(FALSE);
-            $filter->remove('firstname');
-            $filter->remove('lastname');
-            $filter->remove('postal_code');
-			$filter->remove('dob');
-            $form->setInputFilter($filter);
-
         }
+        
+        $filter = $user->getInputFilter();
+        $filter->remove('password');
+        $filter->remove('passwordVerify');
+        $filter->get('title')->setRequired(FALSE);
+        $filter->remove('firstname');
+        $filter->remove('lastname');
+        $filter->remove('postal_code');
+        $filter->remove('dob');
+        $form->setInputFilter($filter);
+        
+        $emailInput = $form->getInputFilter()->get('email');
+        $noObjectExistsValidator = new NoObjectExistsValidator(array(
+        		'object_repository' => $entityManager->getRepository($class),
+        		'fields'            => 'email',
+        		'messages'          => array('objectFound' => 'This email already exists !')
+        ));
+        
+        $emailInput->getValidatorChain()->addValidator($noObjectExistsValidator);
 
         if (!$zfcUserOptions->getEnableUsername()) {
             unset($data['username']);
@@ -113,6 +122,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         }
 
         // If avatar is set, I prepend the url path to the image
+        $fileName=null;
         if (isset($data['avatar'])) {
             $fileName = $data['avatar'];
             $data['avatar'] = $avatarUrl . $fileName;
@@ -189,6 +199,9 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
 
     public function edit(array $data, $user)
     {
+    	$entityManager 		  = $this->getServiceManager()->get('zfcuser_doctrine_em');
+    	$zfcUserOptions = $this->getServiceManager()->get('zfcuser_module_options');
+    	$class 				  = $zfcUserOptions->getUserEntityClass();
         $path                 = $this->getOptions()->getAvatarPath() . DIRECTORY_SEPARATOR;
         $avatar_url           = $this->getOptions()->getAvatarUrl() . '/';
         $roleMapper           = $this->getRoleMapper();
@@ -197,17 +210,25 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $form->get('dob')->setOptions(array('format' => 'Y-m-d'));
         $fileName             = null;
 
-        // remove passord fields validation
+        // remove password fields validation
         $filter = $user->getInputFilter();
         $filter->remove('password');
         $filter->remove('passwordVerify');
-        $filter->get('title')->setRequired(FALSE);
-        $filter->remove('firstname');
-        $filter->remove('lastname');
-        $filter->remove('postal_code');
-		$filter->remove('dob');
+        $filter->get('firstname')->setRequired(FALSE);
+        $filter->get('lastname')->setRequired(FALSE);
         $form->setInputFilter($filter);
 
+        $emailInput = $form->getInputFilter()->get('email');
+        $noObjectExistsValidator = new NoObjectExistsValidator(array(
+        		'object_repository' => $entityManager->getRepository($class),
+        		'fields'            => 'email',
+        		'messages'          => array('objectFound' => 'This email already exists !')
+        ));
+        
+        if($user->getEmail() != $data['email']){
+        	$emailInput->getValidatorChain()->addValidator($noObjectExistsValidator);
+        }
+        
         // If avatar is set, I prepend the url path to the image
         if (isset($data['avatar'])) {
             $fileName = $data['avatar'];
@@ -233,6 +254,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
 	            $data['dob'] = $tmpDate->format('d/m/Y');
 				$form->setData(array('dob' => $data['dob']));
 	        }
+	        
             return false;
         }
 
