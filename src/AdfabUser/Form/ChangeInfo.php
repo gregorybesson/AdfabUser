@@ -26,6 +26,14 @@ class ChangeInfo extends Register
         $this->remove('username');
 
         $this->add(array(
+        	'name' => 'id',
+        	'attributes' => array(
+   				'type' => 'hidden',
+        		'value' => 0
+        	),
+        ));
+        
+        $this->add(array(
                 'name' => 'username',
                 'options' => array(
                         'label' => $translator->translate('Votre pseudo', 'adfabuser'),
