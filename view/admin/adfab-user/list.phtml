@@ -1,15 +1,15 @@
 <?php $this->plugin('translate')->setTranslatorTextDomain('adfabuser');// Pour le texte ?>
 
 <ul class="liste-buttons">
-	<li class="btn-admin"><a href="<?php echo $this->url('zfcadmin/adfabuser/create', array('userId' => 0));?>">Ajouter un nouvel utilisateur</a></li>
+	<li class="btn-admin"><a href="<?php echo $this->url('admin/adfabuser/create', array('userId' => 0));?>">Ajouter un nouvel utilisateur</a></li>
 </ul>
 
 <h1>Liste des utilisateurs</h1>
 
-<div class="sortby-role">Tri par rôle : <a href="<?php echo $this->url('zfcadmin/adfabuser/list', array('roleId' => 'user', 'filter' => 'DESC')); ?>">Joueur</a> | <a href="<?php echo $this->url('zfcadmin/adfabuser/list', array('roleId' => 'admin', 'filter' => 'DESC')); ?>">Administrateur</a> | <a href="<?php echo $this->url('zfcadmin/adfabuser/list', array('roleId' => 'commercial', 'filter' => 'DESC')); ?>">Commercial</a></div>
+<div class="sortby-role">Tri par rôle : <a href="<?php echo $this->url('admin/adfabuser/list', array('roleId' => 'user', 'filter' => 'DESC')); ?>">Joueur</a> | <a href="<?php echo $this->url('admin/adfabuser/list', array('roleId' => 'admin', 'filter' => 'DESC')); ?>">Administrateur</a> | <a href="<?php echo $this->url('admin/adfabuser/list', array('roleId' => 'commercial', 'filter' => 'DESC')); ?>">Commercial</a></div>
 
 <div class="search-user">
-	<form action="<?php echo $this->url('zfcadmin/adfabuser/list', array('roleId' => $this->roleId, 'filter' => 'DESC')); ?>" method="GET" class="row-fluid">
+	<form action="<?php echo $this->url('admin/adfabuser/list', array('roleId' => $this->roleId, 'filter' => 'DESC')); ?>" method="GET" class="row-fluid">
 		<input type="text" name="name" id="" placeholder="Rechercher" value="<?php echo $this->search?>"/>
 		<input type="submit" class="btn btn-success" value="rechercher" />
 	</form>
@@ -56,10 +56,10 @@
             </td>
             <td>
             <?php
-                $editLink   = $this->url('zfcadmin/adfabuser/edit', array('userId' => $user->getId()));
-                $deleteLink = $this->url('zfcadmin/adfabuser/remove', array('userId' => $user->getId()));
-                $resetLink  = $this->url('zfcadmin/adfabuser/reset', array('userId' => $user->getId()));
-				$activateLink = $this->url('zfcadmin/adfabuser/activate', array('userId' => $user->getId()));
+                $editLink   = $this->url('admin/adfabuser/edit', array('userId' => $user->getId()));
+                $deleteLink = $this->url('admin/adfabuser/remove', array('userId' => $user->getId()));
+                $resetLink  = $this->url('admin/adfabuser/reset', array('userId' => $user->getId()));
+				$activateLink = $this->url('admin/adfabuser/activate', array('userId' => $user->getId()));
             ?>
             <a href='<?php echo $resetLink ?>'>Réinitialiser le mot de passe</a> | <a href='<?php echo $editLink ?>'>Editer</a> | <?php if($user->getState() == 0 || $user->getState() == 2):?><a href='<?php echo $activateLink ?>'>Activer</a><?php else:?><a href='<?php echo $deleteLink ?>'>Désactiver</a><?php endif;?>
             </td>
@@ -68,7 +68,7 @@
 </table>
 
 <ul class="liste-buttons bottom">
-	<li class="btn-admin bottom"><a href="<?php echo $this->url('zfcadmin/adfabuser/create', array('userId' => 0));?>">Ajouter un nouvel utilisateur</a></li>
+	<li class="btn-admin bottom"><a href="<?php echo $this->url('admin/adfabuser/create', array('userId' => 0));?>">Ajouter un nouvel utilisateur</a></li>
 </ul>
 
 <?php echo $this->paginationControl($this->users, 'Sliding', 'adfab-user/admin/pagination_userlist.phtml', array('roleId' => $this->roleId, 'filter' => $this->filter)); ?>

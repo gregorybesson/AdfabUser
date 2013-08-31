@@ -54,9 +54,9 @@ class ForgotController extends AbstractActionController
     {
         //$this->getServiceLocator()->get('Zend\Log')->info('ForgotAction...');
         if ($this->zfcUserAuthentication()->hasIdentity()) {
-            return $this->redirect()->toRoute('zfcuser');
+            return $this->redirect()->toRoute('frontend/zfcuser');
         } else {
-            return $this->redirect()->toRoute('zfcuser/forgotpassword');
+            return $this->redirect()->toRoute('frontend/zfcuser/forgotpassword');
         }
     }
 
@@ -123,7 +123,7 @@ class ForgotController extends AbstractActionController
 
         //no request for a new password found
         if ($password === null) {
-            return $this->redirect()->toRoute('zfcuser/forgotpassword');
+            return $this->redirect()->toRoute('frontend/zfcuser/forgotpassword');
         }
 
         $userService = $this->getUserService();

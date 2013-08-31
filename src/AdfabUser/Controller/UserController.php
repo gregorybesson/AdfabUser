@@ -10,11 +10,11 @@ use Zend\View\Model\ViewModel;
 
 class UserController extends ZfcUserController
 {
-    const ROUTE_CHANGEPASSWD = 'zfcuser/changepassword';
+    const ROUTE_CHANGEPASSWD = 'frontend/zfcuser/changepassword';
     // No login page but register page !
-    const ROUTE_LOGIN        = 'zfcuser/register';
-    const ROUTE_REGISTER     = 'zfcuser/register';
-    const ROUTE_CHANGEEMAIL  = 'zfcuser/changeemail';
+    const ROUTE_LOGIN        = 'frontend/zfcuser/register';
+    const ROUTE_REGISTER     = 'frontend/zfcuser/register';
+    const ROUTE_CHANGEEMAIL  = 'frontend/zfcuser/changeemail';
 
     /**
      *
@@ -341,9 +341,13 @@ class UserController extends ZfcUserController
 
     public function logoutAction()
     {
+    	$hybridAuth = $this->getHybridAuth();
+    	
         Hybrid_Auth::logoutAllProviders();
 
-        return $this->forward()->dispatch('zfcuser', array('action' => 'logout'));
+        return $this->forward()->dispatch('zfcuser', array(
+        	'action' => 'logout'
+        ));
     }
 
     /**
@@ -506,7 +510,7 @@ class UserController extends ZfcUserController
                 ->setNamespace('change-info')
                 ->addMessage(true);
 
-            return $this->redirect()->toRoute('zfcuser/profile');
+            return $this->redirect()->toRoute('frontend/zfcuser/profile');
         }
 
         $prg = $this->prg('zfcuser/profile');
@@ -573,7 +577,7 @@ class UserController extends ZfcUserController
                 ->setNamespace('change-password')
                 ->addMessage(true);
 
-            return $this->redirect()->toRoute('zfcuser/profile');
+            return $this->redirect()->toRoute('frontend/zfcuser/profile');
         } elseif (isset($prg['newIdentity'])) {
             $formEmail->setData($prg);
 
@@ -631,7 +635,7 @@ class UserController extends ZfcUserController
                 ->setNamespace('change-email')
                 ->addMessage(true);
 
-            return $this->redirect()->toRoute('zfcuser/profile');
+            return $this->redirect()->toRoute('frontend/zfcuser/profile');
         }
 
         return array(
@@ -696,7 +700,7 @@ class UserController extends ZfcUserController
     {
         // if the user isn't logged in, we can't change password
         if (!$this->zfcUserAuthentication()->hasIdentity()) {
-            return $this->redirect()->toRoute('zfcuser/profile');
+            return $this->redirect()->toRoute('frontend/zfcuser/profile');
         }
 
         if ($this->getRequest()->isPost()) {
@@ -706,7 +710,7 @@ class UserController extends ZfcUserController
             }
         }
 
-        return $this->redirect()->toRoute('zfcuser/profile');
+        return $this->redirect()->toRoute('frontend/zfcuser/profile');
     }
 
     public function prizeCategoryUserAction ()
@@ -723,7 +727,7 @@ class UserController extends ZfcUserController
             }
         }
 
-        return $this->redirect()->toRoute('zfcuser/profile');
+        return $this->redirect()->toRoute('frontend/zfcuser/profile');
     }
 
     /**
@@ -733,7 +737,7 @@ class UserController extends ZfcUserController
     {
         // if the user isn't logged in, we can't change password
         if (!$this->zfcUserAuthentication()->hasIdentity()) {
-            return $this->redirect()->toRoute('zfcuser/profile');
+            return $this->redirect()->toRoute('frontend/zfcuser/profile');
         }
         $userId = $this->getUserService()
         ->getAuthService()

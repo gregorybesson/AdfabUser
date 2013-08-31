@@ -1,14 +1,6 @@
 <?php
 return array(
 
-    /*    'social' => array(
-                'providers' => include __DIR__.'/social.config.php',
-                // if you want to enable logging, set 'debug_mode' to true  then provide a writable file by the web server on 'debug_file'
-                'debug_mode' => false,
-                'debug_file' => '',
-                'config_file' => __DIR__.'/social.config.php',
-        ),*/
-
     'doctrine' => array(
         'driver' => array(
             'zfcuser_entity' => array(
@@ -24,6 +16,19 @@ return array(
             )
         )
     ),
+		
+	'bjyauthorize' => array(
+		'default_role' => 'guest',
+		'identity_provider' => 'BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity',
+		'role_providers' => array(
+			'BjyAuthorize\Provider\Role\Config' => array(
+				'guest' => array(),
+				'user'  => array('children' => array(
+					'admin' => array(),
+				))
+			),
+		),
+	),
 
 	'data-fixture' => array(
 		'AdfabUser_fixture' => __DIR__ . '/../src/AdfabUser/DataFixtures/ORM',
@@ -34,7 +39,7 @@ return array(
             'default_layout' => 'adfab-user/layout/2columns-left',
             'controllers' => array(
             	'adfabuseradmin' => array(
-            		'default_layout' => 'application/layout/admin/admin',
+            		'default_layout' => 'layout/admin',
             	),
                 'adfabuser_user'   => array(
                     'default_layout' => 'adfab-user/layout/2columns-left',

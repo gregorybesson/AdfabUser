@@ -201,7 +201,7 @@ class Module
 
                 'SocialConfig' => function($sm) {
                 $config = $sm->get('Config');
-                $config = isset($config['adfabuser']['social']) ? $config['adfabuser']['social'] : false;
+                $config = isset($config['adfabuser']['social']) ? $config['adfabuser']['social'] : array('providers'=>array());
 
                 $router = $sm->get('Router');
                 // Bug when using doctrine from console https://github.com/SocalNick/ScnSocialAuth/issues/67
@@ -216,7 +216,7 @@ class Module
                     $config['base_url'] = $router->assemble(
                         array(),
                         array(
-                            'name' => 'zfcuser/backend',
+                            'name' => 'frontend/zfcuser/backend',
                             'force_canonical' => true,
                         )
                     );
@@ -225,13 +225,13 @@ class Module
                 // If it's a console request (phpunit or doctrine console)...
                 if (PHP_SAPI === 'cli') {
                     $_SERVER['HTTP_HOST'] = '127.0.0.1'.
-                    $_SERVER['REQUEST_URI'] = 'zfcuser/backend';
+                    $_SERVER['REQUEST_URI'] = 'frontend/zfcuser/backend';
                 }
 
                 // this following config doesn't work with bjyprofiler
                 //https://github.com/SocalNick/ScnSocialAuth/issues/57
                 //$urlHelper = $sm->get('viewhelpermanager')->get('url');
-                //$config['base_url'] = $urlHelper('zfcuser/backend',array(), array('force_canonical' => true));
+                //$config['base_url'] = $urlHelper('frontend/zfcuser/backend',array(), array('force_canonical' => true));
                 return $config;
                 },
 

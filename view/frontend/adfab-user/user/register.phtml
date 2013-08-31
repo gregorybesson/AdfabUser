@@ -6,7 +6,7 @@
 			<p class="h2"><?php echo $this->translate('login or register'); ?></p>
 
 			<!-- login -->
-			<div id="login-part" class="backgrey row-fluid" data-redirect="<?php  if($this->redirect) : echo $this->redirect; else : $this->url('home'); endif; ?>">
+			<div id="login-part" class="backgrey row-fluid" data-redirect="<?php  if($this->redirect) : echo $this->redirect; else : $this->url('frontend'); endif; ?>">
 				<div class="row-fluid hand-arrow-double">
 					<div class="block-left span7">
 						<p class="green"><?php echo $this->translate('Already an account ?')?></p>
@@ -14,7 +14,7 @@
 					<div class="block-right span5">
 					<?php if(!$this->zfcUserIdentity()): ?>
 					    <?php echo $this->adfabUserLoginWidget(array(
-			    		        'redirect' => ($this->redirect) ? $this->redirect : $this->url('home'),
+			    		        'redirect' => ($this->redirect) ? $this->redirect : $this->url('frontend'),
 			    		        'enableRegistration' => false,
 			    		        'template' => 'adfab-user/register/login.phtml'
 				    		)); ?>
@@ -43,7 +43,7 @@
 					</div>
 					<div id="fb-connect" class="span7">
 						<p class="fb-connect-label"><?php echo $this->translate('Use Facebook connect')?></p>
-						<p><a href="<?php echo $this->url('zfcuser/register',array('socialnetwork' => 'facebook')) . ($this->redirect ? '?redirect='.$this->redirect : '');?>"><img src="<?php echo $this->basePath('images/common/fb-connect.png') ?>" alt="Facebook Connect" /></a></p>
+						<p><a href="<?php echo $this->url('frontend/zfcuser/register',array('socialnetwork' => 'facebook')) . ($this->redirect ? '?redirect='.$this->redirect : '');?>"><img src="<?php echo $this->frontendAssetPath('images/common/fb-connect.png') ?>" alt="Facebook Connect" /></a></p>
 					</div>
 				</div>
 
@@ -60,7 +60,7 @@
 						<div class="block-right span7">
 							<?php echo $this->formInput($form->get('lastname')) ?>
 							<?php echo $this->formElementErrors($form->get('lastname')) ?>
-                            <img src="<?php echo $this->basePath('images/common/form-no.png') ?>" class="form-no">
+                            <img src="<?php echo $this->frontendAssetPath('images/common/form-no.png') ?>" class="form-no">
 						</div>
 					</div>
 					<div class="row-fluid">
@@ -68,7 +68,7 @@
 						<div class="block-right span7">
 							<?php echo $this->formInput($form->get('firstname')) ?>
 							<?php echo $this->formElementErrors($form->get('firstname')) ?>
-                            <img src="<?php echo $this->basePath('images/common/form-no.png') ?>" class="form-no">
+                            <img src="<?php echo $this->frontendAssetPath('images/common/form-no.png') ?>" class="form-no">
 						</div>
 					</div>
 					<!-- div class="row-fluid">
@@ -84,7 +84,7 @@
 						<div class="block-right span7">
 						    <?php echo $this->formInput($form->get('email')) ?>
 						    <?php echo $this->formElementErrors($form->get('email')) ?>
-                            <img src="<?php echo $this->basePath('images/common/form-no.png') ?>" class="form-no">
+                            <img src="<?php echo $this->frontendAssetPath('images/common/form-no.png') ?>" class="form-no">
 						</div>
 					</div>
 					<?php //I do hide these fields on Facebook registration ?>
@@ -96,7 +96,7 @@
 						<div class="block-right span7">
 							<?php echo $this->formInput($form->get('password')) ?>
 							<?php echo $this->formElementErrors($form->get('password')) ?>
-                            <img src="<?php echo $this->basePath('images/common/form-no.png') ?>" class="form-no">
+                            <img src="<?php echo $this->frontendAssetPath('images/common/form-no.png') ?>" class="form-no">
 						</div>
 					</div>
 					<div class="row-fluid">
@@ -104,7 +104,7 @@
 						<div class="block-right span7">
 							<?php echo $this->formInput($form->get('passwordVerify')) ?>
 							<?php echo $this->formElementErrors($form->get('passwordVerify')) ?>
-                            <img src="<?php echo $this->basePath('images/common/form-no.png') ?>" class="form-no">
+                            <img src="<?php echo $this->frontendAssetPath('images/common/form-no.png') ?>" class="form-no">
 						</div>
 					</div>
 					<?php endif;?>
@@ -113,7 +113,7 @@
 						<div class="block-right span7 register-select mobile">
 							<?php echo $this->formDateTime($form->get('dob')) ?>
 							<?php echo $this->formElementErrors($form->get('dob')) ?>
-                            <img src="<?php echo $this->basePath('images/common/form-no.png') ?>" class="form-no form-no-select">
+                            <img src="<?php echo $this->frontendAssetPath('images/common/form-no.png') ?>" class="form-no form-no-select">
 						</div>
 					</div>
 					<div class="row-fluid">
@@ -121,7 +121,7 @@
 						<div id="wrapcp" class="block-right span7">
 							<?php echo $this->formInput($form->get('postal_code')) ?>
 							<?php echo $this->formElementErrors($form->get('postal_code')) ?>
-                            <img src="<?php echo $this->basePath('images/common/form-no.png') ?>" class="form-no form-no-cp">
+                            <img src="<?php echo $this->frontendAssetPath('images/common/form-no.png') ?>" class="form-no form-no-cp">
 						</div>
 					</div>
 

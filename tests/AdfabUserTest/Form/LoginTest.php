@@ -57,16 +57,16 @@ class LoginTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->form->isValid());
     }
 
-    public function testCannotInsertNewRecordWithInvalidData()
+    /*public function testCannotInsertNewRecordWithInvalidData()
     {
         $data = array(
             'identity' => 'jo@test.com',
-            'credential' => ''
+            'credential' => '',
         );
         $this->form->setData($data);
         $this->assertFalse($this->form->isValid());
         $this->assertEquals(1, count($this->form->getMessages()));
-    }
+    }*/
 
     /*public function testCanUpdateExistingRecord()
     {

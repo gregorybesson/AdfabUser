@@ -7,14 +7,14 @@
         	<?php if($this->zfcUserIdentity()): ?>
     	        <?php $rank =  $this->rankWidget($this->zfcUserIdentity()->getId());?>
 	    		<div id="user" class="row-fluid orange-dot-bottom">
-	    			<div class="span3 avatar" data-noavatarf="<?php echo $this->basePath('images/user/no-avatar-f.png') ?>" data-noavatarh="<?php echo $this->basePath('images/user/no-avatar-h.png') ?>">
+	    			<div class="span3 avatar" data-noavatarf="<?php echo $this->frontendAssetPath('images/user/no-avatar-f.png') ?>" data-noavatarh="<?php echo $this->frontendAssetPath('images/user/no-avatar-h.png') ?>">
 	    			    <?php if($this->zfcUserIdentity()->getAvatar()):?>
 	    			        <img src="<?php echo $this->basePath($this->zfcUserIdentity()->getAvatar()) ?>" width="50" height= "50" alt="<?php echo $this->zfcUserIdentity()->getFirstname(); ?> <?php echo $this->zfcUserIdentity()->getLastname(); ?>" />
 	    			    <?php else:?>
 	    			    	<?php if($this->zfcUserIdentity()->getTitle() && $this->zfcUserIdentity()->getTitle() == 'M'): ?>
-	    			        	<img src="<?php echo $this->basePath('images/user/no-avatar-h.png') ?>" alt="<?php echo $this->zfcUserIdentity()->getFirstname(); ?> <?php echo $this->zfcUserIdentity()->getLastname(); ?>" width="50" height="50" />
+	    			        	<img src="<?php echo $this->frontendAssetPath('images/user/no-avatar-h.png') ?>" alt="<?php echo $this->zfcUserIdentity()->getFirstname(); ?> <?php echo $this->zfcUserIdentity()->getLastname(); ?>" width="50" height="50" />
 	    			    	<?php else: ?>
-	    			        	<img src="<?php echo $this->basePath('images/user/no-avatar-f.png') ?>" alt="<?php echo $this->zfcUserIdentity()->getFirstname(); ?> <?php echo $this->zfcUserIdentity()->getLastname(); ?>" width="50" height="50" />
+	    			        	<img src="<?php echo $this->frontendAssetPath('images/user/no-avatar-f.png') ?>" alt="<?php echo $this->zfcUserIdentity()->getFirstname(); ?> <?php echo $this->zfcUserIdentity()->getLastname(); ?>" width="50" height="50" />
 	    			    	<?php endif; ?>
 	    			    <?php endif;?>
 	    			</div>
@@ -28,46 +28,46 @@
 								endif;
 	    					?>
 	    				</p>
-	    				<p><a class="greenlink" href="<?php echo $this->url('zfcuser/profile') ?>#avatarfile">Changer votre photo de profil</a></p>
+	    				<p><a class="greenlink" href="<?php echo $this->url('frontend/zfcuser/profile') ?>#avatarfile">Changer votre photo de profil</a></p>
 	    			</div>
 	    		</div>
 
 	    		<div id="point" class="row-fluid orange-dot-bottom">
 	    			<div class="span4">
-	    				<img src="<?php echo $this->basePath('images/common/icon-cup.png') ?>" alt="" />
+	    				<img src="<?php echo $this->frontendAssetPath('images/common/icon-cup.png') ?>" alt="" />
 	    			</div>
 	    			<div class="span8">
 	    				<p>
 	    					<span id="mypoints">Vous avez<br/><span class="green"><?php echo number_format($rank['points'], 0, ',', ' ' ); ?> points</span></span><br/>
 	    					<span class="small"><?php echo $rank['rank'];?><sup><?php echo ($rank['rank'] == 1)? 'ère':'ème'; ?></sup> position</span><br/>
-	    					&gt; <a class="greenlink" href="<?php echo $this->url('reward/leaderboard', array('period'=>'general')) ?>">Voir le classement</a>
+	    					&gt; <a class="greenlink" href="<?php echo $this->url('frontend/reward/leaderboard', array('period'=>'general')) ?>">Voir le classement</a>
 	    				</p>
 	    			</div>
-	    			<p id="more-points"><a href="<?php echo $this->url('cms', array('id' => 'comment-ca-marche')); ?>">Comment gagner plus de points ?</a></p>
+	    			<p id="more-points"><a href="<?php echo $this->url('frontend/cms', array('id' => 'comment-ca-marche')); ?>">Comment gagner plus de points ?</a></p>
 	    		</div>
 
 	    		<div id="gerer" class="orange-dot-bottom">
 	    			<p class="green green-star">Gérer votre compte</p>
 	    			<ul>
 	    				<li>
-	    					<img src="<?php echo $this->basePath('images/user/icon-money-black.png') ?>" alt="" />
-	    					<a href="<?php echo $this->url('badges') ?>">Mes badges et mes points</a>
+	    					<img src="<?php echo $this->frontendAssetPath('images/user/icon-money-black.png') ?>" alt="" />
+	    					<a href="<?php echo $this->url('frontend/badges') ?>">Mes badges et mes points</a>
 	    				</li>
 	    				<li>
-	    					<img src="<?php echo $this->basePath('images/user/icon-calendar-black.png') ?>" alt="" />
-	    					<a href="<?php echo $this->url('activity') ?>">Mon activité</a>
+	    					<img src="<?php echo $this->frontendAssetPath('images/user/icon-calendar-black.png') ?>" alt="" />
+	    					<a href="<?php echo $this->url('frontend/activity') ?>">Mon activité</a>
 	    				</li>
 	    				<li>
-	    					<img src="<?php echo $this->basePath('images/user/icon-cog-black.png') ?>" alt="" />
-	    					<a href="<?php echo $this->url('zfcuser/profile') ?>">Modifier mes informations</a>
+	    					<img src="<?php echo $this->frontendAssetPath('images/user/icon-cog-black.png') ?>" alt="" />
+	    					<a href="<?php echo $this->url('frontend/zfcuser/profile') ?>">Modifier mes informations</a>
 	    				</li>
 	    				<li>
-	    					<img class="icon-news" src="<?php echo $this->basePath('images/header/icon-news.png') ?>" alt="" />
-	    					<a href="<?php echo $this->url('zfcuser/newsletter') ?>">Gérer mes newletters</a>
+	    					<img class="icon-news" src="<?php echo $this->frontendAssetPath('images/header/icon-news.png') ?>" alt="" />
+	    					<a href="<?php echo $this->url('frontend/zfcuser/newsletter') ?>">Gérer mes newletters</a>
 	    				</li>
 	    				<li>
-	    					<img src="<?php echo $this->basePath('images/user/icon-users-black.png') ?>" alt="" />
-	    					<a href="<?php echo $this->url('sponsorfriends') ?>">Parrainer mes amis</a>
+	    					<img src="<?php echo $this->frontendAssetPath('images/user/icon-users-black.png') ?>" alt="" />
+	    					<a href="<?php echo $this->url('frontend/sponsorfriends') ?>">Parrainer mes amis</a>
 	    				</li>
 	    			</ul>
 	    		</div>
@@ -76,20 +76,20 @@
 	    			<p class="green green-star">Comment ça marche ?</p>
 	    			<ul>
 	    				<li>
-	    					<img src="<?php echo $this->basePath('images/user/icon-money-black.png') ?>" alt="" />
-	    					<a href="<?php echo $this->url('cms', array('id' => 'comment-ca-marche')); ?>">Les badges et les points</a>
+	    					<img src="<?php echo $this->frontendAssetPath('images/user/icon-money-black.png') ?>" alt="" />
+	    					<a href="<?php echo $this->url('frontend/cms', array('id' => 'comment-ca-marche')); ?>">Les badges et les points</a>
 	    				</li>
 	    				<li>
-	    					<img src="<?php echo $this->basePath('images/user/icon-calendar-black.png') ?>" alt="" />
-	    					<a href="<?php echo $this->url('faq') ?>">F.A.Q</a>
+	    					<img src="<?php echo $this->frontendAssetPath('images/user/icon-calendar-black.png') ?>" alt="" />
+	    					<a href="<?php echo $this->url('frontend/faq') ?>">F.A.Q</a>
 	    				</li>
 	    				<!-- <li>
-	    					<img src="<?php echo $this->basePath('images/user/icon-cog-black.png') ?>" alt="" />
+	    					<img src="<?php echo $this->frontendAssetPath('images/user/icon-cog-black.png') ?>" alt="" />
 	    					<a href="">La boutique</a>
 	    				</li> -->
 	    				<li>
-	    					<img src="<?php echo $this->basePath('images/user/icon-contact-black.png') ?>" alt="" />
-	    					<a href="<?php echo $this->url('contact') ?>">Contactez-nous</a>
+	    					<img src="<?php echo $this->frontendAssetPath('images/user/icon-contact-black.png') ?>" alt="" />
+	    					<a href="<?php echo $this->url('frontend/contact') ?>">Contactez-nous</a>
 	    				</li>
 	    			</ul>
 	    		</div>
@@ -97,8 +97,8 @@
 	    		<div id="deco">
 	    			<ul>
 	    				<li>
-	    					<img src="<?php echo $this->basePath('images/user/icon-unlocked-black.png') ?>" alt="" />
-	    					<a href="<?php echo $this->url('zfcuser/logout') ?>">Déconnexion</a>
+	    					<img src="<?php echo $this->frontendAssetPath('images/user/icon-unlocked-black.png') ?>" alt="" />
+	    					<a href="<?php echo $this->url('frontend/zfcuser/logout') ?>">Déconnexion</a>
 	    				</li>
 	    			</ul>
 	    		</div>
@@ -109,20 +109,20 @@
 	    			<p class="green green-star">Comment ça marche ?</p>
 	    			<ul>
 	    				<li>
-	    					<img src="<?php echo $this->basePath('images/user/icon-money-black.png') ?>" alt="" />
-	    					<a href="<?php echo $this->url('cms', array('id' => 'comment-ca-marche')); ?>">Les badges et les points</a>
+	    					<img src="<?php echo $this->frontendAssetPath('images/user/icon-money-black.png') ?>" alt="" />
+	    					<a href="<?php echo $this->url('frontend/cms', array('id' => 'comment-ca-marche')); ?>">Les badges et les points</a>
 	    				</li>
 	    				<li>
-	    					<img src="<?php echo $this->basePath('images/user/icon-calendar-black.png') ?>" alt="" />
-	    					<a href="<?php echo $this->url('faq') ?>">F.A.Q</a>
+	    					<img src="<?php echo $this->frontendAssetPath('images/user/icon-calendar-black.png') ?>" alt="" />
+	    					<a href="<?php echo $this->url('frontend/faq') ?>">F.A.Q</a>
 	    				</li>
 	    				<!-- <li>
-	    					<img src="<?php echo $this->basePath('images/user/icon-cog-black.png') ?>" alt="" />
+	    					<img src="<?php echo $this->frontendAssetPath('images/user/icon-cog-black.png') ?>" alt="" />
 	    					<a href="">La boutique</a>
 	    				</li> -->
 	    				<li>
-	    					<img src="<?php echo $this->basePath('images/user/icon-contact-black.png') ?>" alt="" />
-	    					<a href="<?php echo $this->url('contact') ?>">Contactez-nous</a>
+	    					<img src="<?php echo $this->frontendAssetPath('images/user/icon-contact-black.png') ?>" alt="" />
+	    					<a href="<?php echo $this->url('frontend/contact') ?>">Contactez-nous</a>
 	    				</li>
 	    			</ul>
 	    		</div>
@@ -130,8 +130,8 @@
 	    		<div id="deco">
 	    			<ul>
 	    				<li>
-	    					<img src="<?php echo $this->basePath('images/user/icon-users-black.png') ?>" alt="" />
-	    					<a href="<?php echo $this->url('zfcuser/register') . ($this->redirect ? '?redirect='.$this->redirect : '') ?>">Se connecter / Créer un compte</a>
+	    					<img src="<?php echo $this->frontendAssetPath('images/user/icon-users-black.png') ?>" alt="" />
+	    					<a href="<?php echo $this->url('frontend/zfcuser/register') . ($this->redirect ? '?redirect='.$this->redirect : '') ?>">Se connecter / Créer un compte</a>
 	    				</li>
 	    			</ul>
 	    		</div>
