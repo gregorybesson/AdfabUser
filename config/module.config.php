@@ -33,6 +33,9 @@ return array(
         'AdfabUser' => array(
             'default_layout' => 'adfab-user/layout/2columns-left',
             'controllers' => array(
+            	'adfabuseradmin' => array(
+            		'default_layout' => 'application/layout/admin/admin',
+            	),
                 'adfabuser_user'   => array(
                     'default_layout' => 'adfab-user/layout/2columns-left',
                     'children_views' => array(
@@ -76,9 +79,8 @@ return array(
 
     'view_manager' => array(
         'template_path_stack' => array(
-            'adfabuser' => __DIR__ . '/../view',
-        ),
-        'template_map' => array(
+            __DIR__ . '/../view/admin',
+            __DIR__ . '/../view/frontend',
         ),
     ),
 
@@ -323,7 +325,7 @@ return array(
 		            ),
        			),
         	),
-            'zfcadmin' => array(
+            'admin' => array(
                 'child_routes' => array(
                     'adfabuser' => array(
                         'type' => 'Literal',
@@ -469,25 +471,25 @@ return array(
         'admin' => array(
             'adfabuser' => array(
                 'label' => 'Utilisateurs',
-                'route' => 'zfcadmin/adfabuser/list',
+                'route' => 'admin/adfabuser/list',
                 'resource' => 'user',
                 'privilege' => 'list',
                 'pages' => array(
                     'list' => array(
                         'label' => 'Liste des utilisateurs',
-                        'route' => 'zfcadmin/adfabuser/list',
+                        'route' => 'admin/adfabuser/list',
                         'resource' => 'user',
                         'privilege' => 'list',
                     ),
                     'create' => array(
                         'label' => 'Créer un utilisateur',
-                        'route' => 'zfcadmin/adfabuser/create',
+                        'route' => 'admin/adfabuser/create',
                         'resource' => 'user',
                         'privilege' => 'add',
                     ),
                     'edit' => array(
                         'label' => 'Editer un utilisateur',
-                        'route' => 'zfcadmin/adfabuser/edit',
+                        'route' => 'admin/adfabuser/edit',
                         'privilege' => 'edit',
                     ),
                 ),

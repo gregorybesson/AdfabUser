@@ -516,7 +516,6 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
         $form->bind($user);
 
         $data['id'] = $user->getId();
-        
         $avatarPath = $this->getOptions()->getAvatarPath() . DIRECTORY_SEPARATOR;
         $avatarUrl = $this->getOptions()->getAvatarUrl() . '/';
 
@@ -550,6 +549,9 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
 	            $data['dob'] = $tmpDate->format('d/m/Y');
 				$form->setData(array('dob' => $data['dob']));
 	        }
+	        
+	        print_r($form->getMessages());
+	        die('hhhhhh');
             return false;
         }
 

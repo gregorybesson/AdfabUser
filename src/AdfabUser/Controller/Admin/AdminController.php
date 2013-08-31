@@ -45,7 +45,7 @@ class AdminController extends AbstractActionController
         $request = $this->getRequest();
         $form = $this->getServiceLocator()->get('adfabuseradmin_register_form');
         $form->get('submit')->setLabel('Créer');
-        $form->setAttribute('action', $this->url()->fromRoute('zfcadmin/adfabuser/create', array('userId' => 0)));
+        $form->setAttribute('action', $this->url()->fromRoute('admin/adfabuser/create', array('userId' => 0)));
         $form->setAttribute('method', 'post');
 
         $viewModel = new ViewModel();
@@ -64,7 +64,7 @@ class AdminController extends AbstractActionController
             if ($user) {
                 $this->flashMessenger()->setNamespace('adfabuser')->addMessage('L\'utilisateur a été créé');
 
-                return $this->redirect()->toRoute('zfcadmin/adfabuser/list');
+                return $this->redirect()->toRoute('admin/adfabuser/list');
             }
         }
 
@@ -76,7 +76,7 @@ class AdminController extends AbstractActionController
     {
         $userId = $this->getEvent()->getRouteMatch()->getParam('userId');
         if (!$userId) {
-            return $this->redirect()->toRoute('zfcadmin/adfabuser/create');
+            return $this->redirect()->toRoute('admin/adfabuser/create');
         }
 
         $service = $this->getAdminUserService();
@@ -84,7 +84,7 @@ class AdminController extends AbstractActionController
 
         $form = $this->getServiceLocator()->get('adfabuseradmin_register_form');
         $form->get('submit')->setLabel('Mettre à jour');
-        $form->setAttribute('action', $this->url()->fromRoute('zfcadmin/adfabuser/edit', array('userId' => $userId)));
+        $form->setAttribute('action', $this->url()->fromRoute('admin/adfabuser/edit', array('userId' => $userId)));
         $form->setAttribute('method', 'post');
 
         $viewModel = new ViewModel();
@@ -106,7 +106,7 @@ class AdminController extends AbstractActionController
             $result = $this->getAdminUserService()->edit($data, $user);
 
             if ($result) {
-                return $this->redirect()->toRoute('zfcadmin/adfabuser/list');
+                return $this->redirect()->toRoute('admin/adfabuser/list');
             }
         }
 
@@ -140,7 +140,7 @@ class AdminController extends AbstractActionController
             $this->flashMessenger()->setNamespace('adfabuser')->addMessage('The user was deleted');
         }
 
-        return $this->redirect()->toRoute('zfcadmin/adfabuser/list');
+        return $this->redirect()->toRoute('admin/adfabuser/list');
     }
 
     public function activateAction()
@@ -152,7 +152,7 @@ class AdminController extends AbstractActionController
             $this->flashMessenger()->setNamespace('adfabuser')->addMessage('The user was activated');
         }
 
-        return $this->redirect()->toRoute('zfcadmin/adfabuser/list');
+        return $this->redirect()->toRoute('admin/adfabuser/list');
     }
 
     public function resetAction()
@@ -164,7 +164,7 @@ class AdminController extends AbstractActionController
             $this->flashMessenger()->setNamespace('adfabuser')->addMessage('Un mail a été envoyé à '. $user->getEmail());
         }
 
-        return $this->redirect()->toRoute('zfcadmin/adfabuser/list');
+        return $this->redirect()->toRoute('admin/adfabuser/list');
     }
 
     public function setOptions(ModuleOptions $options)

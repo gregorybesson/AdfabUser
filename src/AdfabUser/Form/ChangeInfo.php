@@ -26,11 +26,11 @@ class ChangeInfo extends Register
         $this->remove('username');
 
         $this->add(array(
-        	'name' => 'id',
-        	'attributes' => array(
-   				'type' => 'hidden',
-        		'value' => 0
-        	),
+        		'name' => 'id',
+        		'attributes' => array(
+        				'type' => 'hidden',
+        				'value' => 0
+        		),
         ));
         
         $this->add(array(
