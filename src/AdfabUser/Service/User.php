@@ -550,8 +550,6 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
 				$form->setData(array('dob' => $data['dob']));
 	        }
 	        
-	        print_r($form->getMessages());
-	        die('hhhhhh');
             return false;
         }
 
@@ -747,7 +745,7 @@ class User extends \ZfcUser\Service\User implements ServiceManagerAwareInterface
             $from,
             $record->getEmailAddress(),
             $subject,
-            'adfab-user/frontend/email/verification',
+            'adfab-user/email/verification',
             array('record' => $record, 'userFirstName' => $userFirstName)
         );
 

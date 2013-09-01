@@ -41,6 +41,9 @@ return array(
             	'adfabuseradmin' => array(
             		'default_layout' => 'layout/admin',
             	),
+            	'adfabuseradmin_login' => array(
+           			'default_layout' => 'layout/adminlogin',
+           		),
                 'adfabuser_user'   => array(
                     'default_layout' => 'adfab-user/layout/2columns-left',
                     'children_views' => array(
@@ -103,9 +106,10 @@ return array(
 
     'controllers' => array(
         'invokables' => array(
-            'adfabuseradmin'    => 'AdfabUser\Controller\Admin\AdminController',
-            'adfabuser_user'    => 'AdfabUser\Controller\UserController',
-            'adfabuser_forgot'  => 'AdfabUser\Controller\ForgotController',
+        	'adfabuseradmin_login' => 'AdfabUser\Controller\Admin\LoginController',
+            'adfabuseradmin'       => 'AdfabUser\Controller\Admin\AdminController',
+            'adfabuser_user'       => 'AdfabUser\Controller\UserController',
+            'adfabuser_forgot'     => 'AdfabUser\Controller\ForgotController',
         ),
     ),
 
@@ -331,6 +335,12 @@ return array(
        			),
         	),
             'admin' => array(
+            	'options' => array(
+            		'defaults' => array(
+           				'controller' => 'adfabuseradmin_login',
+           				'action'     => 'login',
+            		),
+            	),
                 'child_routes' => array(
                     'adfabuser' => array(
                         'type' => 'Literal',

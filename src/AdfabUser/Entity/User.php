@@ -760,7 +760,7 @@ class User implements \ZfcUser\Entity\UserInterface, ProviderInterface, InputFil
 
             $inputFilter->add($factory->createInput(array(
                     'name'       => 'id',
-                    'required'   => true,
+                    'required'   => false,
                     'filters' => array(
                         array('name'    => 'Int'),
                     ),
