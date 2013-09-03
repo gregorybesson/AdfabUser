@@ -30,19 +30,19 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
         $user->setUsername('admin');
         $user->setEmail('admin@test.com');
         $user->setState(1);
-        
-        $newPass = 'admin';
-        
+
+        $newPass = 'playground';
+
         $bcrypt = new Bcrypt;
         $bcrypt->setCost(14);
-        
+
         $pass = $bcrypt->create($newPass);
         $user->setPassword($pass);
-        
+
         $user->addRole(
 			$this->getReference('admin-role') // load the stored reference
         );
-        
+
         $manager->persist($user);
 
         $manager->flush();
