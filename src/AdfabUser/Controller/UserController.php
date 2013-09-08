@@ -1094,12 +1094,12 @@ class UserController extends ZfcUserController
     }
 
     /**
-     * TODO remove this F&@king adherence with AdfabReward...
+     * TODO remove this F&@king adherence with PlaygroundReward...
      */
     public function getRewardService()
     {
         if (!$this->rewardService) {
-            $this->rewardService = $this->getServiceLocator()->get('adfabreward_event_service');
+            $this->rewardService = $this->getServiceLocator()->get('playgroundreward_event_service');
         }
 
         return $this->rewardService;
